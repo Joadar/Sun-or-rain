@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="city">
+        <item name="fontPath">@string/font_brandon_reg</item>
+    </style>
+
+    <style name="temperature">
+        <item name="fontPath">@string/font_brandon_thin</item>
+    </style>
+
 </resources>
