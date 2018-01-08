@@ -79,55 +79,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/icon" />
 
-        <LinearLayout
-            android:id="@+id/info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@id/next_days"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/icon">
-
-            <TextView
-                android:id="@+id/humidity"
-                style="@style/infos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:drawablePadding="6dp"
-                android:drawableStart="@drawable/ic_humidity_28dp"
-                android:gravity="center_vertical"
-                android:text="81.4%"
-                android:textColor="#333"
-                android:textSize="28sp" />
-
-            <TextView
-                android:id="@+id/sunrise"
-                style="@style/infos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:drawablePadding="6dp"
-                android:drawableStart="@drawable/ic_sunrise_28dp"
-                android:gravity="center_vertical"
-                android:text="07:35"
-                android:textColor="#333"
-                android:textSize="28sp" />
-
-            <TextView
-                android:id="@+id/sunset"
-                style="@style/infos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="6dp"
-                android:drawableStart="@drawable/ic_sunset_28dp"
-                android:gravity="center_vertical"
-                android:text="19:01"
-                android:textColor="#333"
-                android:textSize="28sp" />
-
-        </LinearLayout>
+        <include layout="@layout/view_infos" />
 
         <TextView
             android:id="@+id/next_days"
@@ -201,29 +153,7 @@
 
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/layout_search"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="#BD2031"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:padding="16dp"
-                android:src="@drawable/ic_close_white_24dp" />
-
-        </FrameLayout>
+        <include layout="@layout/view_search" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
