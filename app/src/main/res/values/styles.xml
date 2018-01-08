@@ -19,7 +19,7 @@
     </style>
 
     <style name="temperature">
-        <item name="fontPath">@string/font_brandon_thin</item>
+        <item name="fontPath">@string/font_brandon_med</item>
     </style>
 
 </resources>
