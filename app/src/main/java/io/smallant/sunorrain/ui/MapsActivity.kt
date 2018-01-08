@@ -1,8 +1,14 @@
 package io.smallant.sunorrain.ui
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewAnimationUtils
+import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -36,15 +42,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -53,7 +50,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.setAllGesturesEnabled(false)
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(49.1617557,1.771124)
+        val sydney = LatLng(49.1617557, 1.771124)
         mMap.addMarker(MarkerOptions().position(sydney).title("Magny-en-Vexin")).showInfoWindow()
         mMap.setOnMarkerClickListener {
             it.showInfoWindow()
@@ -62,12 +59,41 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val camera = LatLng(49.1617557, -4.0)
         mMap.moveCamera(CameraUpdateFactory.newLatLng(camera))
-        /*mMap.addCircle(CircleOptions()
-                .center(sydney)
-                .radius(150.0)
-                .strokeColor(Color.RED)
-                .fillColor(0x220000FF)
-                .strokeWidth(5f)
-        )*/
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_search -> {
+                displaySearch()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    @TargetApi(21)
+    private fun displaySearch() {
+        val menuItem = findViewById<View>(R.id.action_search)
+        menuItem?.let {
+            val location = IntArray(2)
+            menuItem.getLocationOnScreen(location)
+
+            val x = location[0] + menuItem.width / 4
+            val y = location[1] + menuItem.height / 4
+
+            val startRadius = 0
+            val endRadius = Math.hypot(main_layout.width.toDouble(), main_layout.height.toDouble()).toInt()
+
+            val anim = ViewAnimationUtils.createCircularReveal(layout_search, x, y, startRadius.toFloat(), endRadius.toFloat())
+            anim.duration = 500
+
+            layout_search.visibility = View.VISIBLE
+            anim.start()
+        }
     }
 }
