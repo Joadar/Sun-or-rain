@@ -1,5 +1,6 @@
 package io.smallant.sunorrain.ui
 
+import android.animation.Animator
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Bundle
@@ -7,8 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewAnimationUtils
-import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,13 +15,19 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.smallant.sunorrain.R
+import io.smallant.sunorrain.helpers.CircularRevealCompat
+import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import kotlinx.android.synthetic.main.activity_maps.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    private val menuItem by lazy { findViewById<View>(R.id.action_search) }
+
     private lateinit var mMap: GoogleMap
+
+    private var searchVisible: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +41,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        close.setOnClickListener{
+            hideSearch()
+        }
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -78,22 +87,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @TargetApi(21)
     private fun displaySearch() {
-        val menuItem = findViewById<View>(R.id.action_search)
         menuItem?.let {
-            val location = IntArray(2)
-            menuItem.getLocationOnScreen(location)
+            CircularRevealCompat.circularReveal(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    searchVisible = true
+                }
+            })
 
-            val x = location[0] + menuItem.width / 4
-            val y = location[1] + menuItem.height / 4
+        }
+    }
 
-            val startRadius = 0
-            val endRadius = Math.hypot(main_layout.width.toDouble(), main_layout.height.toDouble()).toInt()
+    override fun onBackPressed() {
+        if(searchVisible)
+            hideSearch()
+        else
+            super.onBackPressed()
+    }
 
-            val anim = ViewAnimationUtils.createCircularReveal(layout_search, x, y, startRadius.toFloat(), endRadius.toFloat())
-            anim.duration = 500
-
-            layout_search.visibility = View.VISIBLE
-            anim.start()
+    @TargetApi(21)
+    private fun hideSearch() {
+        menuItem?.let {
+            CircularRevealCompat.circularHide(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    searchVisible = false
+                }
+            })
         }
     }
 }
