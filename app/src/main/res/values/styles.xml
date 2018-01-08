@@ -22,4 +22,8 @@
         <item name="fontPath">@string/font_brandon_med</item>
     </style>
 
+    <style name="infos">
+        <item name="fontPath">@string/font_brandon_light</item>
+    </style>
+
 </resources>

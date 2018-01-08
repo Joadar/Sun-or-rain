@@ -91,38 +91,41 @@
 
             <TextView
                 android:id="@+id/humidity"
+                style="@style/infos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:drawablePadding="6dp"
-                android:drawableStart="@drawable/ic_humidity_24dp"
+                android:drawableStart="@drawable/ic_humidity_28dp"
                 android:gravity="center_vertical"
                 android:text="81.4%"
                 android:textColor="#333"
-                android:textSize="24sp" />
+                android:textSize="28sp" />
 
             <TextView
                 android:id="@+id/sunrise"
+                style="@style/infos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:drawablePadding="6dp"
-                android:drawableStart="@drawable/ic_sunrise_24dp"
+                android:drawableStart="@drawable/ic_sunrise_28dp"
                 android:gravity="center_vertical"
                 android:text="07:35"
                 android:textColor="#333"
-                android:textSize="24sp" />
+                android:textSize="28sp" />
 
             <TextView
                 android:id="@+id/sunset"
+                style="@style/infos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="6dp"
-                android:drawableStart="@drawable/ic_sunset_24dp"
+                android:drawableStart="@drawable/ic_sunset_28dp"
                 android:gravity="center_vertical"
                 android:text="19:01"
                 android:textColor="#333"
-                android:textSize="24sp" />
+                android:textSize="28sp" />
 
         </LinearLayout>
 
