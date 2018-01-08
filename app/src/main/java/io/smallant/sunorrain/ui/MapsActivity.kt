@@ -1,0 +1,62 @@
+package io.smallant.sunorrain.ui
+
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import io.smallant.sunorrain.R
+
+
+
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
+    private lateinit var mMap: GoogleMap
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_maps)
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = supportFragmentManager
+                .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+
+        mMap.setMaxZoomPreference(5F)
+        mMap.setMinZoomPreference(5F)
+        mMap.uiSettings.setAllGesturesEnabled(false)
+
+        // Add a marker in Sydney and move the camera
+        val sydney = LatLng(49.1617557,1.771124)
+        mMap.addMarker(MarkerOptions().position(sydney).title("Magny-en-Vexin")).showInfoWindow()
+        mMap.setOnMarkerClickListener {
+            it.showInfoWindow()
+            true
+        }
+
+        val camera = LatLng(49.1617557, -4.0)
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(camera))
+        /*mMap.addCircle(CircleOptions()
+                .center(sydney)
+                .radius(150.0)
+                .strokeColor(Color.RED)
+                .fillColor(0x220000FF)
+                .strokeWidth(5f)
+        )*/
+    }
+}
