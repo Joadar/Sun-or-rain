@@ -18,6 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.smallant.sunorrain.R
+import io.smallant.sunorrain.adapters.DaysAdapter
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import kotlinx.android.synthetic.main.activity_maps.*
@@ -63,6 +64,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         close.setOnClickListener{
             hideSearch()
         }
+
+        initRecycler()
 
     }
 
@@ -195,5 +198,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val size = Point()
         display.getSize(size)
         screenHeight = size.y
+    }
+
+    private fun initRecycler() {
+        recycler_next_days.apply {
+            setHasFixedSize(true)
+            adapter = DaysAdapter(arrayListOf("Hello", "World", "This", "Is", "Joadar!"))
+        }
     }
 }
