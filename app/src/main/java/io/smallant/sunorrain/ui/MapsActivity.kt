@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -20,6 +21,8 @@ import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import kotlinx.android.synthetic.main.activity_maps.*
 import kotlinx.android.synthetic.main.view_search.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+
+
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -101,6 +104,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @TargetApi(21)
     private fun displaySearch() {
+        button_search.setOnClickListener {
+            hideKeyboard()
+        }
         menuItem?.let {
             CircularRevealCompat.circularReveal(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
                 override fun onAnimationEnd(animation: Animator?) {
@@ -129,5 +135,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             })
         }
+    }
+
+    private fun hideKeyboard() {
+        var view = currentFocus
+        if (view == null) {
+            view = View(this)
+        }
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
