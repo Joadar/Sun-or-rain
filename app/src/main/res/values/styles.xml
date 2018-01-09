@@ -23,7 +23,7 @@
     </style>
 
     <style name="infos">
-        <item name="fontPath">@string/font_brandon_light</item>
+        <item name="fontPath">@string/font_lato_light</item>
     </style>
 
 </resources>

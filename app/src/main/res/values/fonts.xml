@@ -6,4 +6,6 @@
     <string name="font_brandon_bld" translatable="false">fonts/Brandon_bld.otf</string>
     <string name="font_brandon_med" translatable="false">fonts/Brandon_med.otf</string>
 
+    <string name="font_lato_light" translatable="false">fonts/Lato-Light.otf</string>
+
 </resources>
