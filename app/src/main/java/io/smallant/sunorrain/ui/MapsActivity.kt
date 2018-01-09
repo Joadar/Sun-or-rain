@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -44,6 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var differenceY = 0F
     private var initialY = 0F
     private var initialYSaved = false
+    private var isRecyclerScrolling = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,19 +76,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             MotionEvent.ACTION_DOWN -> {
                 y = event.y
                 dy = y - next_days.y
+                isRecyclerScrolling = false
             }
             MotionEvent.ACTION_MOVE -> {
-                differenceY = event.y - dy
-                if (screenHeight - differenceY < (next_days.height + 100)) {
-                    if(!initialYSaved) {
-                        initialYSaved = true
-                        initialY = differenceY
+                if(!isRecyclerScrolling) {
+
+                    differenceY = event.y - dy
+                    if (screenHeight - differenceY < (next_days.height + 100)) {
+                        if (!initialYSaved) {
+                            initialYSaved = true
+                            initialY = differenceY
+                        }
+                        next_days.y = differenceY
                     }
-                    next_days.y = differenceY
-                }
-                if (differenceY > initialY){
-                    differenceY = initialY
-                    next_days.y = initialY
+                    if (differenceY > initialY) {
+                        differenceY = initialY
+                        next_days.y = initialY
+                    }
                 }
             }
         }
@@ -203,6 +209,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initRecycler() {
         recycler_next_days.apply {
             setHasFixedSize(true)
+            addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                    isRecyclerScrolling = true
+                    return false
+                }
+
+                override fun onTouchEvent(rv: RecyclerView?, e: MotionEvent?) {
+
+                }
+
+                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+
+                }
+            })
             adapter = DaysAdapter(arrayListOf("Hello", "World", "This", "Is", "Joadar!"))
         }
     }
