@@ -45,9 +45,9 @@
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@drawable/background_transparent"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/background_transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -60,18 +60,18 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_sunny_24dp"
             app:layout_constraintBottom_toTopOf="@id/info"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintHorizontal_bias="0.3"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/layout_temperature"
             app:layout_constraintTop_toBottomOf="@id/appbar"
-            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintVertical_chainStyle="spread_inside" />
 
         <FrameLayout
             android:id="@+id/layout_temperature"
             android:layout_width="wrap_content"
-            android:layout_marginEnd="16dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="@id/icon"
             app:layout_constraintLeft_toRightOf="@id/icon"
             app:layout_constraintRight_toRightOf="parent"
@@ -91,12 +91,12 @@
                 style="@style/temperature_symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="C"
+                android:layout_gravity="bottom|end"
                 android:layout_marginBottom="20dp"
                 android:layout_marginEnd="2dp"
-                android:layout_gravity="bottom|end"
+                android:text="C"
                 android:textColor="#5e5e5e"
-                android:textSize="24sp"/>
+                android:textSize="24sp" />
 
         </FrameLayout>
 
@@ -107,10 +107,10 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginBottom="56dp"
-            app:layout_constraintTop_toBottomOf="@id/info"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/info" />
 
         <include layout="@layout/view_next_days" />
 

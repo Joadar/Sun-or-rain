@@ -23,55 +23,54 @@
         android:src="@drawable/ic_close_white_24dp" />
 
     <RelativeLayout
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_margin="16dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp">
 
         <EditText
             android:id="@+id/input_city"
-            android:hint="Search a city..."
-            android:textColorHint="@android:color/white"
-            android:padding="16dp"
-            android:background="#8c1825"
-            android:textColor="@android:color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="#8c1825"
+            android:hint="Search a city..."
+            android:padding="16dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
 
         <Button
             android:id="@+id/button_current_location"
-            android:background="?attr/selectableItemBackground"
-            android:textColor="@android:color/white"
-            android:layout_below="@id/input_city"
-            android:layout_alignParentStart="true"
-            android:text="Current location"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/input_city"
+            android:background="?attr/selectableItemBackground"
+            android:text="Current location"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/button_search"
-            android:background="?attr/selectableItemBackground"
-            android:textColor="@android:color/white"
-            android:layout_below="@id/input_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_below="@id/input_city"
+            android:background="?attr/selectableItemBackground"
             android:minWidth="0dp"
             android:text="Search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textColor="@android:color/white" />
 
         <ProgressBar
             android:id="@+id/progress"
-            android:visibility="invisible"
-            android:padding="8dp"
-            android:theme="@style/AppTheme.WhiteAccent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/input_city"
             android:layout_marginEnd="6dp"
             android:layout_marginTop="4dp"
-            android:layout_below="@id/input_city"
-            android:layout_alignParentEnd="true"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+            android:padding="8dp"
+            android:theme="@style/AppTheme.WhiteAccent"
+            android:visibility="invisible" />
 
     </RelativeLayout>
-
-
+    
 </FrameLayout>
