@@ -2,16 +2,12 @@ package io.smallant.sunorrain.ui
 
 import android.animation.Animator
 import android.annotation.TargetApi
-import android.content.Context
-import android.graphics.Point
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -20,11 +16,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.smallant.sunorrain.R
 import io.smallant.sunorrain.adapters.DaysAdapter
+import io.smallant.sunorrain.extensions.getWindowHeight
+import io.smallant.sunorrain.extensions.hideKeyboard
+import io.smallant.sunorrain.extensions.invisible
+import io.smallant.sunorrain.extensions.visible
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import io.smallant.sunorrain.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_home.*
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 
 class HomeActivity : BaseActivity(), OnMapReadyCallback {
@@ -52,15 +51,12 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getWindowHeight()
-
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         //supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         image_close.setOnClickListener {
@@ -71,7 +67,7 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
         }
 
         initRecycler()
-
+        screenHeight = windowManager.getWindowHeight()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -112,7 +108,7 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
         super.onRestoreInstanceState(savedInstanceState)
         searchVisible = savedInstanceState?.getBoolean("searchVisible") == true
         if (searchVisible) {
-            layout_search.visibility = View.VISIBLE
+            layout_search.visible()
         }
     }
 
@@ -180,8 +176,8 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
     }
 
     private fun onSearchWeatherClick() {
-        button_search.visibility = View.INVISIBLE
-        progress.visibility = View.VISIBLE
+        button_search.invisible()
+        progress.visible()
         isSearching = true
         button_current_location.isEnabled = !isSearching
         hideKeyboard()
@@ -210,22 +206,6 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
                 }
             })
         }
-    }
-
-    private fun hideKeyboard() {
-        var view = currentFocus
-        if (view == null) {
-            view = View(this)
-        }
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    private fun getWindowHeight() {
-        val display = windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        screenHeight = size.y
     }
 
     private fun initRecycler() {
