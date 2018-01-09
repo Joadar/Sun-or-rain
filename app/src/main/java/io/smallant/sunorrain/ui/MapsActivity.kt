@@ -32,6 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
 
     private var searchVisible: Boolean = false
+    private var isSearching: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +108,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         button_search.setOnClickListener {
             button_search.visibility = View.INVISIBLE
             progress.visibility = View.VISIBLE
+            isSearching = true
+            button_current_location.isEnabled = !isSearching
             hideKeyboard()
         }
         menuItem?.let {
