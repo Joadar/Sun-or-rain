@@ -70,20 +70,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 y = event.y
-                dy = y - content_next_days.y
+                dy = y - next_days.y
             }
             MotionEvent.ACTION_MOVE -> {
                 differenceY = event.y - dy
-                if (screenHeight - differenceY < (content_next_days.height + 250)) {
+                if (screenHeight - differenceY < (next_days.height + 100)) {
                     if(!initialYSaved) {
                         initialYSaved = true
                         initialY = differenceY
                     }
-                    content_next_days.y = differenceY
+                    next_days.y = differenceY
                 }
                 if (differenceY > initialY){
                     differenceY = initialY
-                    content_next_days.y = initialY
+                    next_days.y = initialY
                 }
             }
         }
