@@ -22,11 +22,12 @@ import io.smallant.sunorrain.R
 import io.smallant.sunorrain.adapters.DaysAdapter
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
+import io.smallant.sunorrain.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 
-class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
+class HomeActivity : BaseActivity(), OnMapReadyCallback {
 
     private val menuItem by lazy { findViewById<View>(R.id.action_search) }
 
@@ -46,10 +47,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var isSearchOpening = false
 
+    override val layoutId: Int = R.layout.activity_home
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
 
         getWindowHeight()
 
@@ -113,10 +114,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         if (searchVisible) {
             layout_search.visibility = View.VISIBLE
         }
-    }
-
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
