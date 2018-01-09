@@ -219,6 +219,7 @@
 
                 <EditText
                     android:id="@+id/input_city"
+                    style="@style/Search.Placeholder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#8c1825"
@@ -229,6 +230,7 @@
 
                 <Button
                     android:id="@+id/button_current_location"
+                    style="@style/Search.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -239,6 +241,7 @@
 
                 <Button
                     android:id="@+id/button_search"
+                    style="@style/Search.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"

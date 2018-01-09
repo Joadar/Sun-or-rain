@@ -34,4 +34,16 @@
         <item name="colorAccent">@android:color/white</item> <!-- Whatever color you want-->
     </style>
 
+    <style name="Search">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Search.Button">
+        <item name="fontPath">@string/font_brandon_med</item>
+    </style>
+
+    <style name="Search.Placeholder">
+        <item name="fontPath">@string/font_lato_light</item>
+    </style>
+
 </resources>
