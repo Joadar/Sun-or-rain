@@ -3,10 +3,12 @@ package io.smallant.sunorrain.ui
 import android.animation.Animator
 import android.annotation.TargetApi
 import android.content.Context
+import android.graphics.Point
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -34,9 +36,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var searchVisible: Boolean = false
     private var isSearching: Boolean = false
 
+    private var screenHeight: Int = 0
+
+    private var y = 0F
+    private var dy = 0F
+    private var differenceY = 0F
+    private var initialY = 0F
+    private var initialYSaved = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+
+        getWindowHeight()
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -50,7 +63,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         close.setOnClickListener{
             hideSearch()
         }
+
     }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                y = event.y
+                dy = y - content_next_days.y
+            }
+            MotionEvent.ACTION_MOVE -> {
+                differenceY = event.y - dy
+                if (screenHeight - differenceY < (content_next_days.height + 250)) {
+                    if(!initialYSaved) {
+                        initialYSaved = true
+                        initialY = differenceY
+                    }
+                    content_next_days.y = differenceY
+                }
+                if (differenceY > initialY){
+                    differenceY = initialY
+                    content_next_days.y = initialY
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
@@ -149,5 +188,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun getWindowHeight() {
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        screenHeight = size.y
     }
 }
