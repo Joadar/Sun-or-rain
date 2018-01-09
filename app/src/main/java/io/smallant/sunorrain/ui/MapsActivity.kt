@@ -223,7 +223,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 }
             })
-            adapter = DaysAdapter(arrayListOf("Hello", "World", "This", "Is", "Joadar!"))
+            adapter = DaysAdapter(arrayListOf("9°C", "1°C", "16°C", "15°C", "21°C"))
         }
     }
 }
