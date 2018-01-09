@@ -47,6 +47,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var initialYSaved = false
     private var isRecyclerScrolling = false
 
+    private var isSearchOpening = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +65,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        close.setOnClickListener{
-            hideSearch()
-            hideKeyboard()
+        close.setOnClickListener {
+            if(!isSearchOpening) {
+                hideSearch()
+                hideKeyboard()
+            }
         }
 
         initRecycler()
@@ -145,7 +149,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_search -> {
-                displaySearch()
+                if(!isSearchOpening) {
+                    displaySearch()
+                }
                 return true
             }
         }
@@ -164,9 +170,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         menuItem?.let {
             CircularRevealCompat.circularReveal(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
+                override fun onAnimationStart(animation: Animator?) {
+                    super.onAnimationStart(animation)
+                    isSearchOpening = true
+                }
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
                     searchVisible = true
+                    isSearchOpening = false
                 }
             })
 
@@ -192,9 +203,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun hideSearch() {
         menuItem?.let {
             CircularRevealCompat.circularHide(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
+                override fun onAnimationStart(animation: Animator?) {
+                    super.onAnimationStart(animation)
+                    isSearchOpening = true
+                }
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
                     searchVisible = false
+                    isSearchOpening = false
                 }
             })
         }
