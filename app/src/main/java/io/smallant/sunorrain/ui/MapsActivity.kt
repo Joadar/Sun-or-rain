@@ -105,6 +105,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     @TargetApi(21)
     private fun displaySearch() {
         button_search.setOnClickListener {
+            button_search.visibility = View.INVISIBLE
+            progress.visibility = View.VISIBLE
             hideKeyboard()
         }
         menuItem?.let {

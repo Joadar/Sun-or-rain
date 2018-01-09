@@ -30,4 +30,8 @@
         <item name="fontPath">@string/font_lato_light</item>
     </style>
 
+    <style name="AppTheme.WhiteAccent">
+        <item name="colorAccent">@android:color/white</item> <!-- Whatever color you want-->
+    </style>
+
 </resources>
