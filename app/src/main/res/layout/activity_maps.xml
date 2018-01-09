@@ -62,24 +62,43 @@
             android:src="@drawable/ic_sunny_24dp"
             app:layout_constraintBottom_toTopOf="@id/info"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/temperature"
+            app:layout_constraintRight_toLeftOf="@id/layout_temperature"
             app:layout_constraintTop_toBottomOf="@id/appbar"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintVertical_chainStyle="spread_inside" />
 
-        <TextView
-            android:id="@+id/temperature"
-            style="@style/temperature"
+        <FrameLayout
+            android:id="@+id/layout_temperature"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:text="16°C"
-            android:textColor="#333"
-            android:textSize="66sp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/icon"
             app:layout_constraintLeft_toRightOf="@id/icon"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/icon" />
+            app:layout_constraintTop_toTopOf="@id/icon">
+
+            <TextView
+                android:id="@+id/temperature"
+                style="@style/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16°"
+                android:textColor="#333"
+                android:textSize="66sp" />
+
+            <TextView
+                android:id="@+id/temperature_symbol"
+                style="@style/temperature_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="2dp"
+                android:layout_gravity="bottom|end"
+                android:textColor="#5e5e5e"
+                android:textSize="24sp"/>
+
+        </FrameLayout>
 
         <include layout="@layout/view_infos" />
 

@@ -22,6 +22,10 @@
         <item name="fontPath">@string/font_brandon_med</item>
     </style>
 
+    <style name="temperature_symbol">
+        <item name="fontPath">@string/font_lato_regular</item>
+    </style>
+
     <style name="infos">
         <item name="fontPath">@string/font_lato_light</item>
     </style>

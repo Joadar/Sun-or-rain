@@ -7,5 +7,6 @@
     <string name="font_brandon_med" translatable="false">fonts/Brandon_med.otf</string>
 
     <string name="font_lato_light" translatable="false">fonts/Lato-Light.otf</string>
+    <string name="font_lato_regular" translatable="false">fonts/Lato-Regular.otf</string>
 
 </resources>
