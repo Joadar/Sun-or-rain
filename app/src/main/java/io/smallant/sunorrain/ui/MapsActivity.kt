@@ -62,7 +62,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        close.setOnClickListener {
+        image_close.setOnClickListener {
             if (!isSearchOpening) {
                 hideSearch()
                 hideKeyboard()
@@ -77,23 +77,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 y = event.y
-                dy = y - next_days.y
+                dy = y - layout_next_days.y
                 isRecyclerScrolling = false
             }
             MotionEvent.ACTION_MOVE -> {
                 if (!isRecyclerScrolling) {
 
                     differenceY = event.y - dy
-                    if (screenHeight - differenceY < (next_days.height + 100)) {
+                    if (screenHeight - differenceY < (layout_next_days.height + 100)) {
                         if (!initialYSaved) {
                             initialYSaved = true
                             initialY = differenceY
                         }
-                        next_days.y = differenceY
+                        layout_next_days.y = differenceY
                     }
                     if (differenceY > initialY) {
                         differenceY = initialY
-                        next_days.y = initialY
+                        layout_next_days.y = initialY
                     }
                 }
             }

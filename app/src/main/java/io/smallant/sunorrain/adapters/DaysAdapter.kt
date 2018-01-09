@@ -14,7 +14,7 @@ class DaysAdapter(val items: ArrayList<String>) : RecyclerView.Adapter<DaysAdapt
 
     override fun onBindViewHolder(holder: DayViewHolder?, position: Int) {
         val text = items[position]
-        holder?.content?.text = text
+        holder?.temperature?.text = text
     }
 
     override fun getItemCount() = items.size
@@ -35,7 +35,7 @@ class DaysAdapter(val items: ArrayList<String>) : RecyclerView.Adapter<DaysAdapt
         notifyItemRemoved(position)
     }
 
-    inner class DayViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val content: TextView by lazy{view.findViewById<TextView>(R.id.content)}
+    inner class DayViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val temperature: TextView by lazy { view.findViewById<TextView>(R.id.text_temperature) }
     }
 }
