@@ -23,6 +23,7 @@ import io.smallant.sunorrain.adapters.DaysAdapter
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import kotlinx.android.synthetic.main.activity_maps.*
+import kotlinx.android.synthetic.main.view_next_days.*
 import kotlinx.android.synthetic.main.view_search.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
