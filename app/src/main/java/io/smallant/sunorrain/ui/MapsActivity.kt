@@ -23,11 +23,7 @@ import io.smallant.sunorrain.adapters.DaysAdapter
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import kotlinx.android.synthetic.main.activity_maps.*
-import kotlinx.android.synthetic.main.view_next_days.*
-import kotlinx.android.synthetic.main.view_search.*
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
-
-
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -67,7 +63,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         close.setOnClickListener {
-            if(!isSearchOpening) {
+            if (!isSearchOpening) {
                 hideSearch()
                 hideKeyboard()
             }
@@ -85,7 +81,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 isRecyclerScrolling = false
             }
             MotionEvent.ACTION_MOVE -> {
-                if(!isRecyclerScrolling) {
+                if (!isRecyclerScrolling) {
 
                     differenceY = event.y - dy
                     if (screenHeight - differenceY < (next_days.height + 100)) {
@@ -114,7 +110,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         searchVisible = savedInstanceState?.getBoolean("searchVisible") == true
-        if(searchVisible) {
+        if (searchVisible) {
             layout_search.visibility = View.VISIBLE
         }
     }
@@ -150,7 +146,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_search -> {
-                if(!isSearchOpening) {
+                if (!isSearchOpening) {
                     displaySearch()
                 }
                 return true
@@ -165,7 +161,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             onSearchWeatherClick()
         }
 
-        button_current_location.setOnClickListener{
+        button_current_location.setOnClickListener {
             onSearchWeatherClick()
         }
 
@@ -175,6 +171,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     super.onAnimationStart(animation)
                     isSearchOpening = true
                 }
+
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
                     searchVisible = true
@@ -185,7 +182,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun onSearchWeatherClick(){
+    private fun onSearchWeatherClick() {
         button_search.visibility = View.INVISIBLE
         progress.visibility = View.VISIBLE
         isSearching = true
@@ -194,7 +191,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onBackPressed() {
-        if(searchVisible)
+        if (searchVisible)
             hideSearch()
         else
             super.onBackPressed()
@@ -208,6 +205,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     super.onAnimationStart(animation)
                     isSearchOpening = true
                 }
+
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
                     searchVisible = false
@@ -236,7 +234,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initRecycler() {
         recycler_next_days.apply {
             setHasFixedSize(true)
-            addOnItemTouchListener(object: RecyclerView.OnItemTouchListener{
+            addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
                 override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
                     isRecyclerScrolling = true
                     return false
