@@ -65,6 +65,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         close.setOnClickListener{
             hideSearch()
+            hideKeyboard()
         }
 
         initRecycler()
@@ -154,12 +155,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     @TargetApi(21)
     private fun displaySearch() {
         button_search.setOnClickListener {
-            button_search.visibility = View.INVISIBLE
-            progress.visibility = View.VISIBLE
-            isSearching = true
-            button_current_location.isEnabled = !isSearching
-            hideKeyboard()
+            onSearchWeatherClick()
         }
+
+        button_current_location.setOnClickListener{
+            onSearchWeatherClick()
+        }
+
         menuItem?.let {
             CircularRevealCompat.circularReveal(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
                 override fun onAnimationEnd(animation: Animator?) {
@@ -169,6 +171,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             })
 
         }
+    }
+
+    private fun onSearchWeatherClick(){
+        button_search.visibility = View.INVISIBLE
+        progress.visibility = View.VISIBLE
+        isSearching = true
+        button_current_location.isEnabled = !isSearching
+        hideKeyboard()
     }
 
     override fun onBackPressed() {
