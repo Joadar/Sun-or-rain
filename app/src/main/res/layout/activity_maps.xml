@@ -57,6 +57,7 @@
             android:id="@+id/icon"
             android:layout_width="200dp"
             android:layout_height="83dp"
+            android:contentDescription="@string/icon_description"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_sunny_24dp"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -80,7 +81,7 @@
                 style="@style/temperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="16°"
+                android:text="@string/fake_temperature"
                 android:textColor="#333"
                 android:textSize="66sp" />
 
@@ -92,7 +93,7 @@
                 android:layout_gravity="bottom|end"
                 android:layout_marginBottom="20dp"
                 android:layout_marginEnd="2dp"
-                android:text="C"
+                android:text="@string/fake_temperature_symbol"
                 android:textColor="#5e5e5e"
                 android:textSize="24sp" />
 
@@ -118,7 +119,7 @@
                 android:drawablePadding="6dp"
                 android:drawableStart="@drawable/ic_humidity_28dp"
                 android:gravity="center_vertical"
-                android:text="81.4%"
+                android:text="@string/fake_humidity"
                 android:textColor="#333"
                 android:textSize="28sp" />
 
@@ -131,7 +132,7 @@
                 android:drawablePadding="6dp"
                 android:drawableStart="@drawable/ic_sunrise_28dp"
                 android:gravity="center_vertical"
-                android:text="07:35"
+                android:text="@string/fake_sunrise"
                 android:textColor="#333"
                 android:textSize="28sp" />
 
@@ -143,7 +144,7 @@
                 android:drawablePadding="6dp"
                 android:drawableStart="@drawable/ic_sunset_28dp"
                 android:gravity="center_vertical"
-                android:text="19:01"
+                android:text="@string/fake_sunset"
                 android:textColor="#333"
                 android:textSize="28sp" />
 
@@ -173,7 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="5 next days"
+                android:text="@string/next_days"
                 android:textAllCaps="true"
                 android:textStyle="bold" />
 
@@ -206,6 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:contentDescription="@string/close_description"
                 android:padding="16dp"
                 android:src="@drawable/ic_close_white_24dp" />
 
@@ -220,7 +222,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#8c1825"
-                    android:hint="Search a city..."
+                    android:hint="@string/search_placeholder"
                     android:padding="16dp"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white" />
@@ -232,7 +234,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/input_city"
                     android:background="?attr/selectableItemBackground"
-                    android:text="Current location"
+                    android:text="@string/search_current_location"
                     android:textColor="@android:color/white" />
 
                 <Button
@@ -243,7 +245,7 @@
                     android:layout_below="@id/input_city"
                     android:background="?attr/selectableItemBackground"
                     android:minWidth="0dp"
-                    android:text="Search"
+                    android:text="@string/search_button"
                     android:textColor="@android:color/white" />
 
                 <ProgressBar

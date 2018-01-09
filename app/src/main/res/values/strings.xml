@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">Sun or rain</string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- Image -->
+    <string name="icon_description">Weather icon</string>
+    <string name="close_description">Close icon</string>
+    <string name="next_days">5 next days</string>
+
+    <!-- Search -->
+    <string name="search_current_location">Current location</string>
+    <string name="search_button">Search</string>
+    <string name="search_placeholder">Search a city…</string>
+
+    <!-- Fake data -->
+    <string name="fake_temperature">16°</string>
+    <string name="fake_temperature_symbol">C</string>
+    <string name="fake_humidity">81.4%</string>
+    <string name="fake_sunrise">07:35</string>
+    <string name="fake_sunset">19:01</string>
+    <string name="fake_date">Monday, 23th</string>
+
 </resources>
