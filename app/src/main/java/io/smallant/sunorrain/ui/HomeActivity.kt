@@ -39,9 +39,11 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
     private var initialY = 0F
     private var initialYSaved = false
     private var isRecyclerScrolling = false
-    private var canMoveNextDays = false
+    private var layoutNextDaysHeight = 0
 
     private var isSearchOpening = false
+
+    private val nextDaysHeightVisible: Int by lazy { resources.getDimensionPixelSize(R.dimen.next_days_height_visible) }
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -66,6 +68,9 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
         screenHeight = windowManager.getWindowHeight()
 
         layout_opacity.alpha = 0F
+        layout_next_days.post {
+            layoutNextDaysHeight = layout_next_days.height
+        }
 
         replaceFragmentSafely(fragment = NextDaysFragment.create("Paris"), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
     }
@@ -80,12 +85,12 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
             MotionEvent.ACTION_MOVE -> {
                 if (!isRecyclerScrolling) {
                     differenceY = event.y - dy
-                    if (y - event.y <= layout_next_days.height) {
+                    if (y - event.y <= layoutNextDaysHeight) {
                         if (!initialYSaved) {
                             initialYSaved = true
                             initialY = differenceY
                         }
-                        val alpha = 0.2F * ((initialY - layout_next_days.y) / (layout_next_days.height))
+                        val alpha = 0.2F * ((initialY - layout_next_days.y) / (layoutNextDaysHeight))
 
                         layout_opacity.alpha = alpha
                         layout_next_days.y = differenceY
@@ -97,8 +102,8 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
                         layout_next_days.y = initialY
                     }
 
-                    if (differenceY < initialY - layout_next_days.height + 56.toPx) {
-                        layout_next_days.y = initialY - layout_next_days.height.toFloat() + 56.toPx
+                    if (differenceY < initialY - layoutNextDaysHeight + nextDaysHeightVisible) {
+                        layout_next_days.y = initialY - layoutNextDaysHeight.toFloat() + nextDaysHeightVisible
                     }
                 }
             }
