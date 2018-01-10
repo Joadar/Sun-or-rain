@@ -3,7 +3,6 @@ package io.smallant.sunorrain.ui
 import android.animation.Animator
 import android.annotation.TargetApi
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -15,14 +14,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.smallant.sunorrain.R
-import io.smallant.sunorrain.adapters.DaysAdapter
-import io.smallant.sunorrain.extensions.getWindowHeight
-import io.smallant.sunorrain.extensions.hideKeyboard
-import io.smallant.sunorrain.extensions.invisible
-import io.smallant.sunorrain.extensions.visible
+import io.smallant.sunorrain.extensions.*
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import io.smallant.sunorrain.ui.base.BaseActivity
+import io.smallant.sunorrain.ui.nextDays.NextDaysFragment
 import kotlinx.android.synthetic.main.activity_home.*
 
 
@@ -43,6 +39,7 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
     private var initialY = 0F
     private var initialYSaved = false
     private var isRecyclerScrolling = false
+    private var canMoveNextDays = false
 
     private var isSearchOpening = false
 
@@ -66,8 +63,10 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
             }
         }
 
-        initRecycler()
         screenHeight = windowManager.getWindowHeight()
+
+
+        replaceFragmentSafely(fragment = NextDaysFragment.create("Paris"), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -79,7 +78,6 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
             }
             MotionEvent.ACTION_MOVE -> {
                 if (!isRecyclerScrolling) {
-
                     differenceY = event.y - dy
                     if (screenHeight - differenceY < (layout_next_days.height + 100)) {
                         if (!initialYSaved) {
@@ -205,27 +203,6 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
                     isSearchOpening = false
                 }
             })
-        }
-    }
-
-    private fun initRecycler() {
-        recycler_next_days.apply {
-            setHasFixedSize(true)
-            addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
-                override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                    isRecyclerScrolling = true
-                    return false
-                }
-
-                override fun onTouchEvent(rv: RecyclerView?, e: MotionEvent?) {
-
-                }
-
-                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-
-                }
-            })
-            adapter = DaysAdapter(arrayListOf("9°C", "1°C", "16°C", "15°C", "21°C"))
         }
     }
 }
