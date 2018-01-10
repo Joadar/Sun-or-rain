@@ -3,7 +3,6 @@ package io.smallant.sunorrain.ui
 import android.animation.Animator
 import android.annotation.TargetApi
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -66,6 +65,7 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
 
         screenHeight = windowManager.getWindowHeight()
 
+        layout_opacity.alpha = 0F
 
         replaceFragmentSafely(fragment = NextDaysFragment.create("Paris"), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
     }
@@ -80,24 +80,25 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
             MotionEvent.ACTION_MOVE -> {
                 if (!isRecyclerScrolling) {
                     differenceY = event.y - dy
-                    if (screenHeight - differenceY < (layout_next_days.height + 100)) {
+                    if (y - event.y <= layout_next_days.height) {
                         if (!initialYSaved) {
                             initialYSaved = true
                             initialY = differenceY
                         }
-                        var alpha = 1 - ((initialY - layout_next_days.y) / (layout_next_days.height + 100))
-                        Log.d("HomeActivityLog", "alpha = $alpha")
-                        if(alpha < 0.5)
-                            alpha = 0.2F
+                        val alpha = 0.2F * ((initialY - layout_next_days.y) / (layout_next_days.height))
 
                         layout_opacity.alpha = alpha
                         layout_next_days.y = differenceY
                     }
+
                     if (differenceY > initialY) {
-                        Log.d("HomeActivityLog", "layout_next_days.y - initialY  = ${layout_next_days.y - initialY }")
-                        layout_opacity.alpha = 1F
+                        layout_opacity.alpha = 0F
                         differenceY = initialY
                         layout_next_days.y = initialY
+                    }
+
+                    if (differenceY < initialY - layout_next_days.height + 56.toPx) {
+                        layout_next_days.y = initialY - layout_next_days.height.toFloat() + 56.toPx
                     }
                 }
             }
