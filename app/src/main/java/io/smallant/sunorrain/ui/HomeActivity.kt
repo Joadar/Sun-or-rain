@@ -3,6 +3,7 @@ package io.smallant.sunorrain.ui
 import android.animation.Animator
 import android.annotation.TargetApi
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -84,9 +85,17 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
                             initialYSaved = true
                             initialY = differenceY
                         }
+                        var alpha = 1 - ((initialY - layout_next_days.y) / (layout_next_days.height + 100))
+                        Log.d("HomeActivityLog", "alpha = $alpha")
+                        if(alpha < 0.5)
+                            alpha = 0.2F
+
+                        layout_opacity.alpha = alpha
                         layout_next_days.y = differenceY
                     }
                     if (differenceY > initialY) {
+                        Log.d("HomeActivityLog", "layout_next_days.y - initialY  = ${layout_next_days.y - initialY }")
+                        layout_opacity.alpha = 1F
                         differenceY = initialY
                         layout_next_days.y = initialY
                     }
