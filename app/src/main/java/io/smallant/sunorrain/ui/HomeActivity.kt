@@ -24,15 +24,21 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity(), OnMapReadyCallback {
 
-    private val menuItem by lazy { findViewById<View>(R.id.action_search) }
+    /**
+     * MAP
+     */
+    private lateinit var map: GoogleMap
 
-    private lateinit var mMap: GoogleMap
-
+    /**
+     * SEARCH
+     */
     private var searchVisible: Boolean = false
+    private var isSearchOpening = false
     private var isSearching: Boolean = false
 
-    private var screenHeight: Int = 0
-
+    /**
+     * NEXT DAYS TRANSITION
+     */
     private var y = 0F
     private var dy = 0F
     private var differenceY = 0F
@@ -40,10 +46,13 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
     private var initialYSaved = false
     private var isRecyclerScrolling = false
     private var layoutNextDaysHeight = 0
-
-    private var isSearchOpening = false
-
+    private var screenHeight: Int = 0
     private val nextDaysHeightVisible: Int by lazy { resources.getDimensionPixelSize(R.dimen.next_days_height_visible) }
+
+    /**
+     * SEARCH
+     */
+    private val menuItem by lazy { findViewById<View>(R.id.action_search) }
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -52,27 +61,10 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-
-        image_close.setOnClickListener {
-            if (!isSearchOpening) {
-                hideSearch()
-                hideKeyboard()
-            }
-        }
-
-        screenHeight = windowManager.getWindowHeight()
-
-        layout_opacity.alpha = 0F
-        layout_next_days.post {
-            layoutNextDaysHeight = layout_next_days.height
-        }
-
-        replaceFragmentSafely(fragment = NextDaysFragment.create("Paris"), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
+        initMap()
+        initClickListener()
+        initNextDaysFragment()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -125,25 +117,6 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
         }
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-
-        mMap.setMaxZoomPreference(5F)
-        mMap.setMinZoomPreference(5F)
-        mMap.uiSettings.setAllGesturesEnabled(false)
-
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(49.1617557, 1.771124)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Magny-en-Vexin")).showInfoWindow()
-        mMap.setOnMarkerClickListener {
-            it.showInfoWindow()
-            true
-        }
-
-        val camera = LatLng(49.1617557, -4.0)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(camera))
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home, menu)
         return true
@@ -159,6 +132,70 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        if (searchVisible)
+            hideSearch()
+        else
+            super.onBackPressed()
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+
+        map.setMaxZoomPreference(5F)
+        map.setMinZoomPreference(5F)
+        map.uiSettings.setAllGesturesEnabled(false)
+
+        // Add a marker in Sydney and move the camera
+        val sydney = LatLng(49.1617557, 1.771124)
+        map.addMarker(MarkerOptions().position(sydney).title("Magny-en-Vexin")).showInfoWindow()
+        map.setOnMarkerClickListener {
+            it.showInfoWindow()
+            true
+        }
+
+        val camera = LatLng(49.1617557, -4.0)
+        map.moveCamera(CameraUpdateFactory.newLatLng(camera))
+    }
+
+    private fun initMap() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    private fun initNextDaysFragment() {
+        screenHeight = windowManager.getWindowHeight()
+
+        layout_opacity.alpha = 0F
+        layout_next_days.post {
+            layoutNextDaysHeight = layout_next_days.height
+        }
+
+        replaceFragmentSafely(fragment = NextDaysFragment.create("Paris"), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
+    }
+
+    private fun initClickListener() {
+        image_close.setOnClickListener {
+            if (!isSearchOpening) {
+                hideSearch()
+                hideKeyboard()
+            }
+        }
+    }
+
+    /**
+     * SEARCH A CITY
+     */
+
+    private fun onSearchWeatherClick() {
+        button_search.invisible()
+        progress.visible()
+        isSearching = true
+        button_current_location.isEnabled = !isSearching
+        hideKeyboard()
     }
 
     @TargetApi(21)
@@ -186,21 +223,6 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback {
             })
 
         }
-    }
-
-    private fun onSearchWeatherClick() {
-        button_search.invisible()
-        progress.visible()
-        isSearching = true
-        button_current_location.isEnabled = !isSearching
-        hideKeyboard()
-    }
-
-    override fun onBackPressed() {
-        if (searchVisible)
-            hideSearch()
-        else
-            super.onBackPressed()
     }
 
     @TargetApi(21)

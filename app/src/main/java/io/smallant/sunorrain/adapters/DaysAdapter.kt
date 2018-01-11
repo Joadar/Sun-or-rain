@@ -10,7 +10,7 @@ import io.smallant.sunorrain.R
 /**
  * Created by jpannetier on 09/01/2018.
  */
-class DaysAdapter(val items: ArrayList<String>) : RecyclerView.Adapter<DaysAdapter.DayViewHolder>() {
+class DaysAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<DaysAdapter.DayViewHolder>() {
 
     override fun onBindViewHolder(holder: DayViewHolder?, position: Int) {
         val text = items[position]

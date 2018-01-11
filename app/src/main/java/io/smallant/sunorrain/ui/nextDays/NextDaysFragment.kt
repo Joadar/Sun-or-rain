@@ -50,7 +50,6 @@ class NextDaysFragment: BaseFragment() {
 
     override var layoutId: Int = R.layout.fragment_next_days
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
