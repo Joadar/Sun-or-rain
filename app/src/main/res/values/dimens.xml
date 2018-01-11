@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="next_days_height_visible">56dp</dimen>
+    <dimen name="next_days_height_visible">72dp</dimen>
 </resources>
