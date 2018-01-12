@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.smallant.sunorrain.R
+import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.extensions.*
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
@@ -31,7 +32,11 @@ import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
 import kotlinx.android.synthetic.main.activity_home.*
 
 
-class HomeActivity : BaseActivity(), OnMapReadyCallback, LocationListener {
+class HomeActivity :
+        BaseActivity(),
+        OnMapReadyCallback,
+        LocationListener,
+HomeContract.View {
 
     /**
      * MAP
@@ -172,6 +177,10 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback, LocationListener {
         map.setMinZoomPreference(5F)
         map.uiSettings.setAllGesturesEnabled(false)
         layout_splashscreen.fadeOut()
+    }
+
+    override fun displayCurrentWeather(data: Weather) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun initMap() {
