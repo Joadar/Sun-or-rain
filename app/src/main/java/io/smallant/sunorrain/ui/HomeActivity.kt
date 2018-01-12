@@ -81,6 +81,9 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback, LocationListener {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        if (savedInstanceState != null) {
+            layout_splashscreen.gone()
+        }
         initMap()
         initClickListener()
         initNextDaysFragment()
@@ -168,6 +171,7 @@ class HomeActivity : BaseActivity(), OnMapReadyCallback, LocationListener {
         map.setMaxZoomPreference(5F)
         map.setMinZoomPreference(5F)
         map.uiSettings.setAllGesturesEnabled(false)
+        layout_splashscreen.fadeOut()
     }
 
     private fun initMap() {

@@ -257,6 +257,37 @@
 
         </FrameLayout>
 
+        <LinearLayout
+            android:id="@+id/layout_splashscreen"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#FFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="64dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="Will it be sunny or runny today?"
+                android:textAlignment="center"
+                android:textSize="32sp" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>
