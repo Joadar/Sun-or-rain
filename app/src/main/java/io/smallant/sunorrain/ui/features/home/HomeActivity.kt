@@ -1,4 +1,4 @@
-package io.smallant.sunorrain.ui
+package io.smallant.sunorrain.ui.features.home
 
 import android.Manifest
 import android.animation.Animator
@@ -27,7 +27,7 @@ import io.smallant.sunorrain.extensions.*
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import io.smallant.sunorrain.ui.base.BaseActivity
-import io.smallant.sunorrain.ui.nextDays.NextDaysFragment
+import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
 import kotlinx.android.synthetic.main.activity_home.*
 
 
