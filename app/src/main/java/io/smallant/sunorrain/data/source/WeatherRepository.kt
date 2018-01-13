@@ -123,7 +123,7 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
                 else if (name.contains("rain")) return R.drawable.rain
                 else if (name.contains("snow")) return R.drawable.snow
                 else if (name.equals("clear sky")) {
-                    if (hour >= 21 || hour < 7) {
+                    if (hour >= 18 || hour < 7) {
                         return R.drawable.moon
                     } else {
                         R.drawable.sun
