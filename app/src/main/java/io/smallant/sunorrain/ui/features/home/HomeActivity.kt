@@ -82,12 +82,15 @@ class HomeActivity :
     private val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 10F
     private val MIN_TIME_BW_UPDATES = (1000 * 60 * 1).toLong()
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 101
+    private var currentLatitude: Double = 0.0
+    private var currentLongitude: Double = 0.0
 
     /**
      * OTHER
      */
 
     private val presenter: HomePresenter by lazy { HomePresenter(repository) }
+    private var splashScreenDisplayed: Boolean = false
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -199,7 +202,10 @@ class HomeActivity :
         text_sunrise.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(data.sys.sunrise * 1000))
         text_sunset.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(data.sys.sunset * 1000))
         image_weather.setImageResource(data.icon)
-        layout_splashscreen.fadeOut()
+        if (!splashScreenDisplayed) {
+            layout_splashscreen.fadeOut()
+            splashScreenDisplayed = true
+        }
         hideSearch()
     }
 
@@ -305,6 +311,8 @@ class HomeActivity :
     override fun onProviderEnabled(provider: String?) {}
     override fun onProviderDisabled(provider: String?) {}
     override fun onLocationChanged(location: Location) {
+        currentLatitude = location.latitude
+        currentLongitude = location.longitude
         presenter.getWeather(location.latitude, location.longitude)
     }
 
@@ -328,7 +336,7 @@ class HomeActivity :
         }
 
         button_current_location.setOnClickListener {
-            onSearchWeatherClick()
+            presenter.getWeather(currentLatitude, currentLongitude)
         }
 
         menuItem?.let {
@@ -359,14 +367,18 @@ class HomeActivity :
 
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
-                    searchVisible = false
-                    isSearchOpening = false
-                    button_search.visible()
-                    progress.invisible()
-                    isSearching = false
-                    button_current_location.isEnabled = !isSearching
+                    onSearchClose()
                 }
             })
         }
+    }
+
+    private fun onSearchClose() {
+        searchVisible = false
+        isSearchOpening = false
+        button_search.visible()
+        progress.invisible()
+        isSearching = false
+        button_current_location.isEnabled = !isSearching
     }
 }
