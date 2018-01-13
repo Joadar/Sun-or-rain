@@ -16,6 +16,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -114,6 +115,8 @@ class HomeActivity :
         initMap()
         initClickListener()
         initNextDaysFragment()
+
+        manageSearchActions()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -341,8 +344,7 @@ class HomeActivity :
         }
     }
 
-    @TargetApi(21)
-    private fun displaySearch() {
+    private fun manageSearchActions() {
         button_search.setOnClickListener {
             onSearchWeatherClick()
         }
@@ -351,6 +353,18 @@ class HomeActivity :
             presenter.getWeather(currentLatitude, currentLongitude)
         }
 
+        input_city.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                onSearchWeatherClick()
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    @TargetApi(21)
+    private fun displaySearch() {
         menuItem?.let {
             CircularRevealCompat.circularReveal(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
                 override fun onAnimationStart(animation: Animator?) {

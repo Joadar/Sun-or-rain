@@ -214,7 +214,9 @@
                     android:layout_height="wrap_content"
                     android:background="#8c1825"
                     android:hint="@string/search_placeholder"
+                    android:imeOptions="actionDone"
                     android:padding="16dp"
+                    android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white" />
 
