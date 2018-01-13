@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.smallant.sunorrain.R
+import io.smallant.sunorrain.SORApplication.Companion.repository
 import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.extensions.*
 import io.smallant.sunorrain.helpers.CircularRevealCompat
@@ -36,7 +37,7 @@ class HomeActivity :
         BaseActivity(),
         OnMapReadyCallback,
         LocationListener,
-HomeContract.View {
+        HomeContract.View {
 
     /**
      * MAP
@@ -78,6 +79,12 @@ HomeContract.View {
     private val MIN_TIME_BW_UPDATES = (1000 * 60 * 1).toLong()
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 101
 
+    /**
+     * OTHER
+     */
+
+    private val presenter: HomePresenter by lazy { HomePresenter(repository) }
+
     override val layoutId: Int = R.layout.activity_home
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,14 +93,17 @@ HomeContract.View {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        presenter.view = this
+
         if (savedInstanceState != null) {
             layout_splashscreen.gone()
+        } else {
+            //presenter.getWeather("Perpignan")
         }
+
         initMap()
         initClickListener()
         initNextDaysFragment()
-
-        //manageUserLocation()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -176,11 +186,14 @@ HomeContract.View {
         map.setMaxZoomPreference(5F)
         map.setMinZoomPreference(5F)
         map.uiSettings.setAllGesturesEnabled(false)
-        layout_splashscreen.fadeOut()
     }
 
     override fun displayCurrentWeather(data: Weather) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        addMarker(data.coord.lat, data.coord.lon, data.name)
+        text_temperature.text = "${data.main.temp}°"
+        text_humidity.text = "${data.main.humidity}"
+        image_weather.setImageResource(data.icon)
+        layout_splashscreen.fadeOut()
     }
 
     private fun initMap() {
@@ -229,18 +242,18 @@ HomeContract.View {
     private fun requestLocation() {
         locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
-                0L,
-                0F,
+                MIN_TIME_BW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES,
                 this)
     }
 
-    private fun addMarker(location: Location, cityName: String) {
-        map.addMarker(MarkerOptions().position(LatLng(location.latitude, location.longitude)).title(cityName)).showInfoWindow()
+    private fun addMarker(lat: Double, lon: Double, cityName: String) {
+        map.addMarker(MarkerOptions().position(LatLng(lat, lon)).title(cityName)).showInfoWindow()
         map.setOnMarkerClickListener {
             it.showInfoWindow()
             true
         }
-        val camera = LatLng(location.latitude, location.longitude - 4.75)
+        val camera = LatLng(lat, lon - 4.75)
         map.moveCamera(CameraUpdateFactory.newLatLng(camera))
     }
 
@@ -281,7 +294,7 @@ HomeContract.View {
     override fun onProviderEnabled(provider: String?) {}
     override fun onProviderDisabled(provider: String?) {}
     override fun onLocationChanged(location: Location) {
-        addMarker(location, "Paris")
+        presenter.getWeather(location.latitude, location.longitude)
     }
 
     /**

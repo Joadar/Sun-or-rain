@@ -1,13 +1,14 @@
 package io.smallant.sunorrain.data.models
 
 data class Weather(
-        val coord: Coordinates,
-        val weather: List<Detail>,
-        val main: Main,
-        val dt: Long,
-        val sys: Sys,
-        val id: Long,
-        val name: String
+        val coord: Coordinates = Coordinates(0.0, 0.0),
+        val weather: List<Detail> = arrayListOf(),
+        val main: Main = Main(0F, 0F, 0F, 0F, 0F),
+        val dt: Long = 0,
+        val sys: Sys = Sys(0L, "", 0L, 0L),
+        val id: Long = 0,
+        val name: String = "",
+        var icon: Int = 0
 )
 
 data class Main(
@@ -26,8 +27,8 @@ data class Sys(
 )
 
 data class Coordinates(
-        val lon: Float,
-        val lat: Float
+        val lon: Double,
+        val lat: Double
 )
 
 data class Detail(
