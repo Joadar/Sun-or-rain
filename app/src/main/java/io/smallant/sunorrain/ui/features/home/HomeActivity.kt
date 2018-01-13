@@ -31,6 +31,8 @@ import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import io.smallant.sunorrain.ui.base.BaseActivity
 import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
 import kotlinx.android.synthetic.main.activity_home.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class HomeActivity :
@@ -192,6 +194,8 @@ class HomeActivity :
         addMarker(data.coord.lat, data.coord.lon, data.name)
         text_temperature.text = "${data.main.temp}°"
         text_humidity.text = "${data.main.humidity}"
+        text_sunrise.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(data.sys.sunrise * 1000))
+        text_sunset.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(data.sys.sunset * 1000))
         image_weather.setImageResource(data.icon)
         layout_splashscreen.fadeOut()
     }
