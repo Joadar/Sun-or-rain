@@ -72,8 +72,6 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
     override fun getCurrentWeather(latitude: Double, longitude: Double): Observable<Weather> {
         if (!isCacheDirty && cityWeather != null) {
             return Observable.just(cityWeather)
-        } else if (cityWeather == null) {
-            cityWeather = Weather()
         }
 
         return remoteDataSource.getCurrentWeather(latitude, longitude)
