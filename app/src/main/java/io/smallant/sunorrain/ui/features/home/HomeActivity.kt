@@ -21,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import io.smallant.sunorrain.R
 import io.smallant.sunorrain.SORApplication.Companion.repository
@@ -45,6 +46,7 @@ class HomeActivity :
      * MAP
      */
     private lateinit var map: GoogleMap
+    private var currentLocationMarker: Marker? = null
 
     /**
      * SEARCH
@@ -253,7 +255,11 @@ class HomeActivity :
     }
 
     private fun addMarker(lat: Double, lon: Double, cityName: String) {
-        map.addMarker(MarkerOptions().position(LatLng(lat, lon)).title(cityName)).showInfoWindow()
+        currentLocationMarker?.let {
+            it.remove()
+        }
+        currentLocationMarker = map.addMarker(MarkerOptions().position(LatLng(lat, lon)).title(cityName))
+        currentLocationMarker?.showInfoWindow()
         map.setOnMarkerClickListener {
             it.showInfoWindow()
             true
