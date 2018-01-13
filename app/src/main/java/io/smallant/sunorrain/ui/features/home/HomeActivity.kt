@@ -198,6 +198,7 @@ class HomeActivity :
         text_sunset.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(data.sys.sunset * 1000))
         image_weather.setImageResource(data.icon)
         layout_splashscreen.fadeOut()
+        hideSearch()
     }
 
     private fun initMap() {
@@ -311,6 +312,7 @@ class HomeActivity :
         isSearching = true
         button_current_location.isEnabled = !isSearching
         hideKeyboard()
+        presenter.getWeather(input_city.text.toString())
     }
 
     @TargetApi(21)
@@ -353,6 +355,10 @@ class HomeActivity :
                     super.onAnimationEnd(animation)
                     searchVisible = false
                     isSearchOpening = false
+                    button_search.visible()
+                    progress.invisible()
+                    isSearching = false
+                    button_current_location.isEnabled = !isSearching
                 }
             })
         }

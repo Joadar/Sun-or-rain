@@ -8,7 +8,7 @@ interface HomeContract {
     }
 
     interface Presenter {
-        fun getWeather(city: String)
-        fun getWeather(latitude: Double, longitude: Double)
+        fun getWeather(city: String, refresh: Boolean = true)
+        fun getWeather(latitude: Double, longitude: Double, refresh: Boolean = true)
     }
 }

@@ -9,25 +9,31 @@ class HomePresenter(private val repository: WeatherRepository) : HomeContract.Pr
 
     var view: HomeContract.View? = null
 
-    override fun getWeather(city: String) {
+    override fun getWeather(city: String, refresh: Boolean) {
+        if (refresh)
+            repository.refreshWeatherDay()
+
         repository.getCurrentWeather(city)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     view?.displayCurrentWeather(it)
                 }, {
-                    Log.d("HomePresenterLog", "error on getting current weather = ${it.message}")
+                    Log.e("HomePresenterLog", "error on getting current weather = ${it.message}")
                 })
     }
 
-    override fun getWeather(latitude: Double, longitude: Double) {
+    override fun getWeather(latitude: Double, longitude: Double, refresh: Boolean) {
+        if (refresh)
+            repository.refreshWeatherDay()
+
         repository.getCurrentWeather(latitude, longitude)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
                     view?.displayCurrentWeather(it)
                 }, {
-                    Log.d("HomePresenterLog", "error on getting current weather lat/lon = ${it.message}")
+                    Log.e("HomePresenterLog", "error on getting current weather lat/lon = ${it.message}")
                 })
     }
 }
