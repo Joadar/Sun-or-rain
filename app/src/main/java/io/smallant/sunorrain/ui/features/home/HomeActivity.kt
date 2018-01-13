@@ -35,7 +35,6 @@ import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import io.smallant.sunorrain.ui.base.BaseActivity
 import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
 import kotlinx.android.synthetic.main.activity_home.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -205,7 +204,6 @@ class HomeActivity :
 
     override fun displayCurrentWeather(data: Weather) {
         val timeZone = jsonController.getTimeZone(data.sys.country)
-        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
 
         addMarker(data.coord.lat, data.coord.lon, data.name)
         text_time.text = getHoursMinutes(Calendar.getInstance().timeInMillis / 1000, timeZone)
@@ -370,7 +368,7 @@ class HomeActivity :
             presenter.getWeather(currentLatitude, currentLongitude)
         }
 
-        input_city.setOnEditorActionListener { v, actionId, event ->
+        input_city.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 onSearchWeatherClick()
                 true
