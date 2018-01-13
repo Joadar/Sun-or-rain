@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import io.smallant.sunorrain.R
 import io.smallant.sunorrain.data.models.ForecastDetail
@@ -16,6 +17,7 @@ class DaysAdapter(private var items: List<ForecastDetail>) : RecyclerView.Adapte
     override fun onBindViewHolder(holder: DayViewHolder?, position: Int) {
         val weather = items[position]
         holder?.temperature?.text = "${Math.ceil(weather.temp?.day?.toDouble() ?: 0.0).toInt()}°C"
+        holder?.icon?.setImageResource(weather.icon)
     }
 
     override fun getItemCount() = items.size
@@ -32,5 +34,6 @@ class DaysAdapter(private var items: List<ForecastDetail>) : RecyclerView.Adapte
 
     inner class DayViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val temperature: TextView by lazy { view.findViewById<TextView>(R.id.text_temperature) }
+        val icon: ImageView by lazy { view.findViewById<ImageView>(R.id.image_weather) }
     }
 }

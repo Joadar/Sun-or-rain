@@ -44,8 +44,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:contentDescription="@string/icon_description"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_sunny_24dp" />
+            android:scaleType="center"
+            android:src="@drawable/fog_day" />
 
     </LinearLayout>
 

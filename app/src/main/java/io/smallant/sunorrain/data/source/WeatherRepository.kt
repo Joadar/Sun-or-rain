@@ -83,6 +83,9 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
                 }
                 .doOnNext {
                     weekWeather = it
+                    weekWeather?.list?.map {
+                        it.icon = checkIcon(it.weather[0].description, 12)
+                    }
                 }
                 .doOnComplete {
                     isWeekWeatherCacheDirty = false
@@ -100,6 +103,9 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
                 }
                 .doOnNext {
                     weekWeather = it
+                    weekWeather?.list?.map {
+                        it.icon = checkIcon(it.weather[0].description, 12)
+                    }
                 }
                 .doOnComplete {
                     isWeekWeatherCacheDirty = false
