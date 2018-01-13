@@ -324,19 +324,21 @@ class HomeActivity :
      */
 
     override fun displaySearchError() {
-        toastError?.cancel()
-        toastError = Toast.makeText(this, "An error occurred, please try another city name", Toast.LENGTH_LONG)
-        toastError?.show()
+        displayToast("Impossible to find this city, please try another one")
         resultSearching()
     }
 
     private fun onSearchWeatherClick() {
-        presenter.getWeather(input_city.text.toString())
-        hideKeyboard()
-        isSearching = true
-        button_current_location.isEnabled = !isSearching
-        button_search.invisible()
-        progress.visible()
+        if (!input_city.text.isNullOrEmpty()) {
+            presenter.getWeather(input_city.text.toString())
+            hideKeyboard()
+            isSearching = true
+            button_current_location.isEnabled = !isSearching
+            button_search.invisible()
+            progress.visible()
+        } else {
+            displayToast("Enter a city before clicking on search button :)")
+        }
     }
 
     @TargetApi(21)
@@ -394,5 +396,11 @@ class HomeActivity :
         progress.invisible()
         isSearching = false
         button_current_location.isEnabled = !isSearching
+    }
+
+    private fun displayToast(message: String) {
+        toastError?.cancel()
+        toastError = Toast.makeText(this, message, Toast.LENGTH_LONG)
+        toastError?.show()
     }
 }
