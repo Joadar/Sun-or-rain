@@ -1,6 +1,7 @@
 package io.smallant.sunorrain.data.services
 
 import io.reactivex.Observable
+import io.smallant.sunorrain.data.models.Forecast
 import io.smallant.sunorrain.data.models.Weather
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -46,22 +47,22 @@ class WeatherService {
         api = retrofit.create(API::class.java)
     }
 
-    fun getWeatherWeek(city: String) = api.getWeatherWeek(city)
     fun getCurrentWeather(city: String) = api.getCurrentWeather(city)
-    fun getWeatherDayLatLon(lat: Double, lon: Double) = api.getWeatherDayLatLon(lat, lon)
-    fun getWeatherWeekLatLon(lat: Double, lon: Double) = api.getWeatherWeekLatLon(lat, lon)
+    fun getCurrentWeather(lat: Double, lon: Double) = api.getCurrentWeather(lat, lon)
+    fun getWeatherWeek(city: String) = api.getWeatherWeek(city)
+    fun getWeatherWeek(lat: Double, lon: Double) = api.getWeatherWeek(lat, lon)
 
     interface API {
-        @GET("data/2.5/forecast/daily?mode=json&units=metric&cnt=7")
-        fun getWeatherWeek(@Query("q") query: String): Observable<Weather>
-
         @GET("data/2.5/weather?mode=json&units=metric")
         fun getCurrentWeather(@Query("q") query: String): Observable<Weather>
 
         @GET("data/2.5/weather?mode=json&units=metric")
-        fun getWeatherDayLatLon(@Query("lat") lat: Double, @Query("lon") lon: Double): Observable<Weather>
+        fun getCurrentWeather(@Query("lat") lat: Double, @Query("lon") lon: Double): Observable<Weather>
 
         @GET("data/2.5/forecast/daily?mode=json&units=metric&cnt=7")
-        fun getWeatherWeekLatLon(@Query("lat") lat: Double, @Query("lon") lon: Double): Observable<Weather>
+        fun getWeatherWeek(@Query("q") query: String): Observable<Forecast>
+
+        @GET("data/2.5/forecast/daily?mode=json&units=metric&cnt=7")
+        fun getWeatherWeek(@Query("lat") lat: Double, @Query("lon") lon: Double): Observable<Forecast>
     }
 }

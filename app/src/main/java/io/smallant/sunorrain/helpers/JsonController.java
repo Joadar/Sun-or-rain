@@ -1,7 +1,6 @@
 package io.smallant.sunorrain.helpers;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +15,7 @@ import java.util.Iterator;
 public class JsonController {
     Context context;
 
-    public JsonController(Context context){
+    public JsonController(Context context) {
         this.context = context;
     }
 
@@ -36,7 +35,7 @@ public class JsonController {
         return json;
     }
 
-    public String getTimeZone(String countryCode){
+    public String getTimeZone(String countryCode) {
         String valueTimeZone = "";
         try {
             JSONObject obj = new JSONObject(loadJSONFromAsset());
@@ -47,8 +46,7 @@ public class JsonController {
                 String key = iter.next();
                 try {
                     JSONObject value = m_jArry.getJSONObject(key);
-                    Log.d("Details-->", "value == " + value.getString("name"));
-                    if(value.getString("abbr").equals(countryCode)){
+                    if (value.getString("abbr").equals(countryCode)) {
                         valueTimeZone = value.getJSONArray("zones").get(0).toString();
                         break;
                     }

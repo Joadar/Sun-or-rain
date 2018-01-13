@@ -37,3 +37,37 @@ data class Detail(
         val description: String,
         val icon: String
 )
+
+data class Forecast(
+        val list: List<ForecastDetail>,
+        val city: City
+)
+
+data class ForecastDetail(
+        val dt: Long = 0,
+        val temp: Temperature? = null,
+        val pressure: Float = 0F,
+        val humidity: Int = 0,
+        val weather: List<Detail> = listOf(),
+        val speed: Float = 0F,
+        val deg: Int = 0
+)
+
+data class Temperature(
+        val day: Float,
+        val min: Float,
+        val max: Float,
+        val night: Float,
+        val eve: Float,
+        val morn: Float,
+        val temp: Float,
+        val temp_min: Float,
+        val temp_max: Float
+)
+
+data class City(
+        val id: Long,
+        val name: String,
+        val coord: Coordinates,
+        val country: String
+)

@@ -5,7 +5,7 @@
     <!-- Image -->
     <string name="icon_description">Weather icon</string>
     <string name="close_description">Close icon</string>
-    <string name="next_days">5 next days</string>
+    <string name="next_days">Next days</string>
 
     <!-- Search -->
     <string name="search_current_location">Current location</string>

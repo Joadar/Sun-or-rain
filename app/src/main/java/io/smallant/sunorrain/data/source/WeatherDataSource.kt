@@ -1,6 +1,7 @@
 package io.smallant.sunorrain.data.source
 
 import io.reactivex.Observable
+import io.smallant.sunorrain.data.models.Forecast
 import io.smallant.sunorrain.data.models.Weather
 
 
@@ -9,8 +10,8 @@ import io.smallant.sunorrain.data.models.Weather
  */
 
 interface WeatherDataSource {
-    fun getWeekWeather(city: String): Observable<Weather>
     fun getCurrentWeather(city: String): Observable<Weather>
     fun getCurrentWeather(latitude: Double, longitude: Double): Observable<Weather>
-    fun getWeekWeather(latitude: Double, longitude: Double): Observable<Weather>
+    fun getWeekWeather(city: String): Observable<Forecast>
+    fun getWeekWeather(latitude: Double, longitude: Double): Observable<Forecast>
 }

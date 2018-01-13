@@ -6,15 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import io.smallant.sunorrain.R
+import io.smallant.sunorrain.data.models.ForecastDetail
 
 /**
  * Created by jpannetier on 09/01/2018.
  */
-class DaysAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<DaysAdapter.DayViewHolder>() {
+class DaysAdapter(private var items: List<ForecastDetail>) : RecyclerView.Adapter<DaysAdapter.DayViewHolder>() {
 
     override fun onBindViewHolder(holder: DayViewHolder?, position: Int) {
-        val text = items[position]
-        holder?.temperature?.text = text
+        val weather = items[position]
+        holder?.temperature?.text = "${Math.ceil(weather.temp?.day?.toDouble() ?: 0.0).toInt()}°C"
     }
 
     override fun getItemCount() = items.size
@@ -24,15 +25,9 @@ class DaysAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<D
         return DayViewHolder(view)
     }
 
-    fun add(item: String, position: Int) {
-        items.add(position, item)
-        notifyItemInserted(position)
-    }
-
-    fun remove(item: String) {
-        val position = items.indexOf(item)
-        items.removeAt(position)
-        notifyItemRemoved(position)
+    fun add(items: List<ForecastDetail>) {
+        this.items = items
+        notifyDataSetChanged()
     }
 
     inner class DayViewHolder(view: View) : RecyclerView.ViewHolder(view) {

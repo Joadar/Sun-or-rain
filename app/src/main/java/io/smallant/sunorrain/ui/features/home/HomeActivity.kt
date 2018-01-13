@@ -218,6 +218,7 @@ class HomeActivity :
             layout_splashscreen.fadeOut()
             splashScreenDisplayed = true
         }
+        replaceFragmentSafely(fragment = NextDaysFragment.create(data.coord.lat, data.coord.lon), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
         hideSearch()
     }
 
@@ -245,7 +246,7 @@ class HomeActivity :
             layoutNextDaysHeight = layout_next_days.height
         }
 
-        replaceFragmentSafely(fragment = NextDaysFragment.create("Paris"), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
+        replaceFragmentSafely(fragment = NextDaysFragment.create("Miami"), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
     }
 
     private fun initClickListener() {

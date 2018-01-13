@@ -1,7 +1,7 @@
 package io.smallant.sunorrain.data.source.remote
 
-import android.content.Context
 import io.reactivex.Observable
+import io.smallant.sunorrain.data.models.Forecast
 import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.data.services.WeatherService
 import io.smallant.sunorrain.data.source.WeatherDataSource
@@ -28,20 +28,20 @@ open class RemoteDataSource(private val api: WeatherService = WeatherService()) 
         }
     }
 
-    override fun getWeekWeather(city: String): Observable<Weather> {
-        return api.getWeatherWeek(city)
-    }
-
     override fun getCurrentWeather(city: String): Observable<Weather> {
         return api.getCurrentWeather(city)
     }
 
     override fun getCurrentWeather(latitude: Double, longitude: Double): Observable<Weather> {
-        return api.getWeatherDayLatLon(latitude, longitude)
+        return api.getCurrentWeather(latitude, longitude)
     }
 
-    override fun getWeekWeather(latitude: Double, longitude: Double): Observable<Weather> {
-        return api.getWeatherWeekLatLon(latitude, longitude)
+    override fun getWeekWeather(city: String): Observable<Forecast> {
+        return api.getWeatherWeek(city)
+    }
+
+    override fun getWeekWeather(latitude: Double, longitude: Double): Observable<Forecast> {
+        return api.getWeatherWeek(latitude, longitude)
     }
 
     private fun getLocalHour(timeZone: String): String {
