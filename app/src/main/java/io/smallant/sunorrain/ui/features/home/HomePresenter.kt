@@ -20,6 +20,7 @@ class HomePresenter(private val repository: WeatherRepository) : HomeContract.Pr
                     view?.displayCurrentWeather(it)
                 }, {
                     Log.e("HomePresenterLog", "error on getting current weather = ${it.message}")
+                    view?.displaySearchError()
                 })
     }
 
@@ -34,6 +35,7 @@ class HomePresenter(private val repository: WeatherRepository) : HomeContract.Pr
                     view?.displayCurrentWeather(it)
                 }, {
                     Log.e("HomePresenterLog", "error on getting current weather lat/lon = ${it.message}")
+                    view?.displaySearchError()
                 })
     }
 }

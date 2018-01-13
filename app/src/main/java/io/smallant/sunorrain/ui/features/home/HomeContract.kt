@@ -5,6 +5,7 @@ import io.smallant.sunorrain.data.models.Weather
 interface HomeContract {
     interface View {
         fun displayCurrentWeather(data: Weather)
+        fun displaySearchError()
     }
 
     interface Presenter {

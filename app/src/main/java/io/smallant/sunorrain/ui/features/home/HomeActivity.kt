@@ -16,6 +16,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -36,6 +37,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+@SuppressLint("ShowToast")
 class HomeActivity :
         BaseActivity(),
         OnMapReadyCallback,
@@ -91,6 +93,7 @@ class HomeActivity :
 
     private val presenter: HomePresenter by lazy { HomePresenter(repository) }
     private var splashScreenDisplayed: Boolean = false
+    private var toastError: Toast? = null
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -320,13 +323,20 @@ class HomeActivity :
      * SEARCH A CITY
      */
 
+    override fun displaySearchError() {
+        toastError?.cancel()
+        toastError = Toast.makeText(this, "An error occurred, please try another city name", Toast.LENGTH_LONG)
+        toastError?.show()
+        resultSearching()
+    }
+
     private fun onSearchWeatherClick() {
-        button_search.invisible()
-        progress.visible()
+        presenter.getWeather(input_city.text.toString())
+        hideKeyboard()
         isSearching = true
         button_current_location.isEnabled = !isSearching
-        hideKeyboard()
-        presenter.getWeather(input_city.text.toString())
+        button_search.invisible()
+        progress.visible()
     }
 
     @TargetApi(21)
@@ -376,6 +386,10 @@ class HomeActivity :
     private fun onSearchClose() {
         searchVisible = false
         isSearchOpening = false
+        resultSearching()
+    }
+
+    private fun resultSearching() {
         button_search.visible()
         progress.invisible()
         isSearching = false
