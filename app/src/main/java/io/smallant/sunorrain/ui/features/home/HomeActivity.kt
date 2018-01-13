@@ -30,6 +30,7 @@ import io.smallant.sunorrain.SORApplication.Companion.repository
 import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.extensions.*
 import io.smallant.sunorrain.helpers.CircularRevealCompat
+import io.smallant.sunorrain.helpers.JsonController
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import io.smallant.sunorrain.ui.base.BaseActivity
 import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
@@ -95,6 +96,7 @@ class HomeActivity :
     private val presenter: HomePresenter by lazy { HomePresenter(repository) }
     private var splashScreenDisplayed: Boolean = false
     private var toastError: Toast? = null
+    private val jsonController: JsonController by lazy { JsonController(this) }
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -202,17 +204,30 @@ class HomeActivity :
     }
 
     override fun displayCurrentWeather(data: Weather) {
+        val timeZone = jsonController.getTimeZone(data.sys.country)
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+
         addMarker(data.coord.lat, data.coord.lon, data.name)
         text_temperature.text = "${Math.ceil(data.main.temp).toInt()}°"
         text_humidity.text = "${data.main.humidity}%"
-        text_sunrise.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(data.sys.sunrise * 1000))
-        text_sunset.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(data.sys.sunset * 1000))
+        text_sunrise.text = getHoursMinutes(data.sys.sunrise, timeZone)
+        text_sunset.text = getHoursMinutes(data.sys.sunset, timeZone)
         image_weather.setImageResource(data.icon)
         if (!splashScreenDisplayed) {
             layout_splashscreen.fadeOut()
             splashScreenDisplayed = true
         }
         hideSearch()
+    }
+
+    private fun getHoursMinutes(time: Long, timeZone: String) =
+            String.format("%02d:%02d", calendarFromTimeZone(time, timeZone).get(Calendar.HOUR_OF_DAY), calendarFromTimeZone(time, timeZone).get(Calendar.MINUTE))
+
+    private fun calendarFromTimeZone(time: Long, timeZone: String): Calendar {
+        val date = Date(time * 1000)
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone), Locale.getDefault())
+        calendar.time = date
+        return calendar
     }
 
     private fun initMap() {

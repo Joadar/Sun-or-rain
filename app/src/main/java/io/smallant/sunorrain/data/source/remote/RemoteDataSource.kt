@@ -1,5 +1,6 @@
 package io.smallant.sunorrain.data.source.remote
 
+import android.content.Context
 import io.reactivex.Observable
 import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.data.services.WeatherService
