@@ -208,6 +208,7 @@ class HomeActivity :
         val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
 
         addMarker(data.coord.lat, data.coord.lon, data.name)
+        text_time.text = getHoursMinutes(Calendar.getInstance().timeInMillis / 1000, timeZone)
         text_temperature.text = "${Math.ceil(data.main.temp).toInt()}°"
         text_humidity.text = "${data.main.humidity}%"
         text_sunrise.text = getHoursMinutes(data.sys.sunrise, timeZone)
