@@ -206,11 +206,11 @@ class HomeActivity :
         val timeZone = jsonController.getTimeZone(data.sys.country)
 
         addMarker(data.coord.lat, data.coord.lon, data.name)
-        text_time.text = getHoursMinutes(Calendar.getInstance().timeInMillis / 1000, timeZone)
+        text_time.text = (Calendar.getInstance().timeInMillis / 1000).getHoursMinutes(timeZone)
         text_temperature.text = getString(R.string.temperature, data.main.temp.toCeil, "")
         text_humidity.text = getString(R.string.humidity, data.main.humidity.toInt())
-        text_sunrise.text = getHoursMinutes(data.sys.sunrise, timeZone)
-        text_sunset.text = getHoursMinutes(data.sys.sunset, timeZone)
+        text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
+        text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
         image_weather.setImageResource(data.icon)
         if (!splashScreenDisplayed) {
             layout_splashscreen.fadeOut()
@@ -218,16 +218,6 @@ class HomeActivity :
         }
         replaceFragmentSafely(fragment = NextDaysFragment.create(data.coord.lat, data.coord.lon), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
         hideSearch()
-    }
-
-    private fun getHoursMinutes(time: Long, timeZone: String) =
-            String.format("%02d:%02d", calendarFromTimeZone(time, timeZone).get(Calendar.HOUR_OF_DAY), calendarFromTimeZone(time, timeZone).get(Calendar.MINUTE))
-
-    private fun calendarFromTimeZone(time: Long, timeZone: String): Calendar {
-        val date = Date(time * 1000)
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone), Locale.getDefault())
-        calendar.time = date
-        return calendar
     }
 
     private fun initMap() {

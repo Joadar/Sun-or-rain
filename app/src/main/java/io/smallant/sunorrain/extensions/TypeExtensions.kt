@@ -1,13 +1,7 @@
 package io.smallant.sunorrain.extensions
 
-import android.content.res.Resources
 import io.smallant.sunorrain.R
-
-val Int.toPx: Int
-    get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-
-val Int.toDp: Int
-    get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+import java.util.*
 
 val Double?.toCeil: Int
     get() = Math.ceil(this ?: 0.0).toInt()
@@ -33,4 +27,18 @@ fun String.checkIcon(hour: Int): Int {
             return R.drawable.sun
         }
     }
+}
+
+fun Long.getHoursMinutes(timeZone: String) =
+        String.format(
+                "%02d:%02d",
+                this.calendarFromTimeZone(timeZone).get(Calendar.HOUR_OF_DAY),
+                this.calendarFromTimeZone(timeZone).get(Calendar.MINUTE)
+        )
+
+fun Long.calendarFromTimeZone(timeZone: String): Calendar {
+    val date = Date(this * 1000)
+    val calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone), Locale.getDefault())
+    calendar.time = date
+    return calendar
 }
