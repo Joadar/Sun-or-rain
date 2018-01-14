@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_licences">Licences</string>
+
+    <string name="key_preferences_rate" translatable="false">prefs_key_preferences_rate</string>
+    <string name="title_preferences_rate">Rate the app</string>
+
+    <string name="key_about_contact" translatable="false">key_contact</string>
+    <string name="title_about_contact">Contact us (suggestions, bugs, thanks, &#8230;)</string>
+
+    <string name="key_about_extra_libs" translatable="false">key_libs</string>
+    <string name="title_about_extra_libs">Licences</string>
+
+    <string name="key_preferences_version" translatable="false">prefs_key_preferences_version</string>
+    <string name="title_preferences_version">Application version : %1$s</string>
+
+    <string name="contact_email_title">Sun or Rain : suggestions, bugs, thanks, &#8230;</string>
+    <string name="contact_default_email">smallant.apps@gmail.com</string>
+    <string name="send_email_with">Send Email Using&#8230;</string>
+
+</resources>

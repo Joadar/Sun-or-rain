@@ -20,6 +20,7 @@ import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.JsonController
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import io.smallant.sunorrain.ui.base.BaseMapLocationActivity
+import io.smallant.sunorrain.ui.features.about.AboutActivity
 import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.*
@@ -143,6 +144,10 @@ class HomeActivity :
                 if (!isSearchOpening) {
                     displaySearch()
                 }
+                return true
+            }
+            R.id.action_about -> {
+                AboutActivity.create(this)
                 return true
             }
         }

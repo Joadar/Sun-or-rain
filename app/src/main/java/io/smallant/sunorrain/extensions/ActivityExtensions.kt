@@ -1,9 +1,11 @@
 package io.smallant.sunorrain.extensions
 
+import android.content.Context
 import android.support.annotation.AnimRes
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
 
 /**
  * Created by jpannetier on 10/01/2018.
@@ -26,3 +28,6 @@ fun AppCompatActivity.replaceFragmentSafely(fragment: Fragment,
         ft.commitAllowingStateLoss()
     }
 }
+
+fun Context.toast(message: CharSequence, length: Int = Toast.LENGTH_SHORT) =
+        Toast.makeText(this, message, length).show()
