@@ -30,86 +30,19 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
     }
 
     override fun getCurrentWeather(city: String): Observable<Weather> {
-        if (!isCurrentWeatherCacheDirty && currentWeather != null) {
-            return Observable.just(currentWeather)
-        }
-
-        val remoteData = remoteDataSource.getCurrentWeather(city)
-                .flatMap {
-                    Observable.just(it)
-                }
-                .doOnNext {
-                    val date = Date(it.dt * 1000)
-                    val calendar = Calendar.getInstance(Locale.getDefault())
-                    calendar.time = date
-
-                    currentWeather = it
-                    currentWeather?.icon = checkIcon(it.weather[0].description, calendar.get(Calendar.HOUR_OF_DAY))
-                }
-                .doOnComplete {
-                    isCurrentWeatherCacheDirty = false
-                }
-
-        return remoteData
+        return manageCurrentWeather(remoteDataSource.getCurrentWeather(city))
     }
 
     override fun getCurrentWeather(latitude: Double, longitude: Double): Observable<Weather> {
-        if (!isCurrentWeatherCacheDirty && currentWeather != null) {
-            return Observable.just(currentWeather)
-        }
-
-        return remoteDataSource.getCurrentWeather(latitude, longitude)
-                .doOnNext {
-                    val date = Date(it.dt * 1000)
-                    val calendar = Calendar.getInstance(Locale.getDefault())
-                    calendar.time = date
-
-                    currentWeather = it
-                    currentWeather?.icon = checkIcon(it.weather[0].description, calendar.get(Calendar.HOUR_OF_DAY))
-                }
-                .doOnComplete {
-                    isCurrentWeatherCacheDirty = false
-                }
+        return manageCurrentWeather(remoteDataSource.getCurrentWeather(latitude, longitude))
     }
 
     override fun getWeekWeather(city: String): Observable<Forecast> {
-        if (!isWeekWeatherCacheDirty && weekWeather != null) {
-            return Observable.just(weekWeather)
-        }
-
-        return remoteDataSource.getWeekWeather(city)
-                .flatMap {
-                    Observable.just(it)
-                }
-                .doOnNext {
-                    weekWeather = it
-                    weekWeather?.list?.map {
-                        it.icon = checkIcon(it.weather[0].description, 12)
-                    }
-                }
-                .doOnComplete {
-                    isWeekWeatherCacheDirty = false
-                }
+        return manageWeekWeather(remoteDataSource.getWeekWeather(city))
     }
 
     override fun getWeekWeather(latitude: Double, longitude: Double): Observable<Forecast> {
-        if (!isWeekWeatherCacheDirty && weekWeather != null) {
-            return Observable.just(weekWeather)
-        }
-
-        return remoteDataSource.getWeekWeather(latitude, longitude)
-                .flatMap {
-                    Observable.just(it)
-                }
-                .doOnNext {
-                    weekWeather = it
-                    weekWeather?.list?.map {
-                        it.icon = checkIcon(it.weather[0].description, 12)
-                    }
-                }
-                .doOnComplete {
-                    isWeekWeatherCacheDirty = false
-                }
+        return manageWeekWeather(remoteDataSource.getWeekWeather(latitude, longitude))
     }
 
     fun refreshWeatherDay() {
@@ -118,6 +51,41 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
 
     fun refreshWeekWeather() {
         isWeekWeatherCacheDirty = true
+    }
+
+    private fun manageCurrentWeather(data: Observable<Weather>): Observable<Weather> {
+        if (!isCurrentWeatherCacheDirty && currentWeather != null) {
+            return Observable.just(currentWeather)
+        }
+
+        return data.flatMap {
+            Observable.just(it)
+        }.doOnNext {
+            val date = Date(it.dt * 1000)
+            val calendar = Calendar.getInstance(Locale.getDefault())
+            calendar.time = date
+
+            currentWeather = it
+            currentWeather?.icon = checkIcon(it.weather[0].description, calendar.get(Calendar.HOUR_OF_DAY))
+        }.doOnComplete {
+            isCurrentWeatherCacheDirty = false
+        }
+    }
+
+    private fun manageWeekWeather(data: Observable<Forecast>): Observable<Forecast> {
+        if (!isWeekWeatherCacheDirty && weekWeather != null) {
+            return Observable.just(weekWeather)
+        }
+        return data.flatMap {
+            Observable.just(it)
+        }.doOnNext {
+            weekWeather = it
+            weekWeather?.list?.map {
+                it.icon = checkIcon(it.weather[0].description, 12)
+            }
+        }.doOnComplete {
+            isWeekWeatherCacheDirty = false
+        }
     }
 
     private fun checkIcon(name: String, hour: Int): Int {
@@ -131,7 +99,7 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
                 if (name.contains("clouds")) return R.drawable.clouds
                 else if (name.contains("rain")) return R.drawable.rain
                 else if (name.contains("snow")) return R.drawable.snow
-                else if (name.equals("clear sky")) {
+                else if (name == "clear sky") {
                     if (hour >= 18 || hour < 7) {
                         return R.drawable.moon
                     } else {
