@@ -46,9 +46,7 @@ class HomeActivity :
     private var differenceY = 0F
     private var initialY = 0F
     private var initialYSaved = false
-    private var isRecyclerScrolling = false
     private var layoutNextDaysHeight = 0
-    private var screenHeight: Int = 0
     private val nextDaysHeightVisible: Int by lazy { resources.getDimensionPixelSize(R.dimen.next_days_height_visible) }
 
     /**
@@ -88,31 +86,28 @@ class HomeActivity :
             MotionEvent.ACTION_DOWN -> {
                 y = event.y
                 dy = y - layout_next_days.y
-                isRecyclerScrolling = false
             }
             MotionEvent.ACTION_MOVE -> {
-                if (!isRecyclerScrolling) {
-                    differenceY = event.y - dy
-                    if (y - event.y <= layoutNextDaysHeight) {
-                        if (!initialYSaved) {
-                            initialYSaved = true
-                            initialY = differenceY
-                        }
-                        val alpha = 0.2F * ((initialY - layout_next_days.y) / (layoutNextDaysHeight))
-
-                        layout_opacity.alpha = alpha
-                        layout_next_days.y = differenceY
+                differenceY = event.y - dy
+                if (y - event.y <= layoutNextDaysHeight) {
+                    if (!initialYSaved) {
+                        initialYSaved = true
+                        initialY = differenceY
                     }
+                    val alpha = 0.2F * ((initialY - layout_next_days.y) / (layoutNextDaysHeight))
 
-                    if (differenceY > initialY) {
-                        layout_opacity.alpha = 0F
-                        differenceY = initialY
-                        layout_next_days.y = initialY
-                    }
+                    layout_opacity.alpha = alpha
+                    layout_next_days.y = differenceY
+                }
 
-                    if (differenceY < initialY - layoutNextDaysHeight + nextDaysHeightVisible) {
-                        layout_next_days.y = initialY - layoutNextDaysHeight.toFloat() + nextDaysHeightVisible
-                    }
+                if (differenceY > initialY) {
+                    layout_opacity.alpha = 0F
+                    differenceY = initialY
+                    layout_next_days.y = initialY
+                }
+
+                if (differenceY < initialY - layoutNextDaysHeight + nextDaysHeightVisible) {
+                    layout_next_days.y = initialY - layoutNextDaysHeight.toFloat() + nextDaysHeightVisible
                 }
             }
         }
@@ -181,8 +176,6 @@ class HomeActivity :
     }
 
     private fun initNextDaysFragment() {
-        screenHeight = windowManager.getWindowHeight()
-
         layout_opacity.alpha = 0F
         layout_next_days.post {
             layoutNextDaysHeight = layout_next_days.height
