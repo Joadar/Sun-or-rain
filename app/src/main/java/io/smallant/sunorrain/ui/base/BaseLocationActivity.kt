@@ -23,14 +23,28 @@ abstract class BaseLocationActivity :
     protected var currentLatitude: Double = 0.0
     protected var currentLongitude: Double = 0.0
 
-    override fun onResume() {
-        super.onResume()
-        manageUserLocation()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            manageUserLocation()
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
+        super.onDestroy()
         locationManager.removeUpdates(this)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putDouble("currentLatitude", currentLatitude)
+        outState?.putDouble("currentLongitude", currentLongitude)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        currentLatitude = savedInstanceState?.getDouble("currentLatitude", 0.0) ?: 0.0
+        currentLongitude = savedInstanceState?.getDouble("currentLongitude", 0.0) ?: 0.0
     }
 
     override fun onLocationChanged(location: Location) {

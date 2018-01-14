@@ -57,7 +57,7 @@ class HomeActivity :
     private var splashScreenDisplayed: Boolean = false
     private var toastError: Toast? = null
     private val jsonController: JsonController by lazy { JsonController(this) }
-
+    private lateinit var currentWeather: Weather
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -71,8 +71,6 @@ class HomeActivity :
 
         if (savedInstanceState != null) {
             layout_splashscreen.gone()
-        } else {
-            //presenter.getWeather("Perpignan")
         }
 
         initClickListener()
@@ -118,6 +116,7 @@ class HomeActivity :
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBoolean("searchVisible", searchVisible)
+        outState?.putSerializable("currentWeather", currentWeather)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -126,6 +125,7 @@ class HomeActivity :
         if (searchVisible) {
             layout_search.visible()
         }
+        displayWeatherInfos(savedInstanceState?.getSerializable("currentWeather") as Weather, true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -153,21 +153,30 @@ class HomeActivity :
     }
 
     override fun displayCurrentWeather(data: Weather) {
-        val timeZone = jsonController.getTimeZone(data.sys.country)
 
         addMarker(data.coord.lat, data.coord.lon, data.name)
-        text_time.text = (Calendar.getInstance().timeInMillis / 1000).getHoursMinutes(timeZone)
-        text_temperature.text = getString(R.string.temperature, data.main.temp.toCeil, "")
-        text_humidity.text = getString(R.string.humidity, data.main.humidity.toInt())
-        text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
-        text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
-        image_weather.setImageResource(data.icon)
+        displayWeatherInfos(data, false)
+
         if (!splashScreenDisplayed) {
             layout_splashscreen.fadeOut()
             splashScreenDisplayed = true
         }
         replaceFragmentSafely(fragment = NextDaysFragment.create(data.coord.lat, data.coord.lon), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
         hideSearch()
+    }
+
+    private fun displayWeatherInfos(data: Weather, refresh: Boolean) {
+        currentWeather = data
+        val timeZone = jsonController.getTimeZone(data.sys.country)
+        text_time.text = (Calendar.getInstance().timeInMillis / 1000).getHoursMinutes(timeZone)
+        text_temperature.text = getString(R.string.temperature, data.main.temp.toCeil, "")
+        text_humidity.text = getString(R.string.humidity, data.main.humidity.toInt())
+        text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
+        text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
+        image_weather.setImageResource(data.icon)
+        if (refresh) {
+            presenter.getWeather(data.coord.lat, data.coord.lon)
+        }
     }
 
     override fun initMap() {

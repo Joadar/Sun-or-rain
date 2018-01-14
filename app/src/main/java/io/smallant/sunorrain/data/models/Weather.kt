@@ -1,5 +1,7 @@
 package io.smallant.sunorrain.data.models
 
+import java.io.Serializable
+
 data class Weather(
         val coord: Coordinates,
         val weather: List<Detail>,
@@ -9,7 +11,7 @@ data class Weather(
         val id: Long,
         val name: String,
         var icon: Int
-)
+): Serializable
 
 data class Main(
         val temp: Double,
