@@ -1,5 +1,6 @@
 package io.smallant.sunorrain.data.models
 
+import android.os.Parcelable
 import java.io.Serializable
 
 data class Weather(
@@ -43,7 +44,7 @@ data class Detail(
 data class Forecast(
         val list: List<ForecastDetail>,
         val city: City
-)
+): Serializable
 
 data class ForecastDetail(
         val dt: Long = 0,

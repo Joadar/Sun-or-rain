@@ -71,10 +71,14 @@ class HomeActivity :
 
         if (savedInstanceState != null) {
             layout_splashscreen.gone()
+        } else {
+            initNextDaysFragment()
         }
-
+        layout_opacity.alpha = 0F
+        layout_next_days.post {
+            layoutNextDaysHeight = layout_next_days.height
+        }
         initClickListener()
-        initNextDaysFragment()
 
         manageSearchActions()
     }
@@ -175,7 +179,7 @@ class HomeActivity :
         text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
         image_weather.setImageResource(data.icon)
         if (refresh) {
-            presenter.getWeather(data.coord.lat, data.coord.lon)
+            //presenter.getWeather(data.coord.lat, data.coord.lon)
         }
     }
 
@@ -185,11 +189,6 @@ class HomeActivity :
     }
 
     private fun initNextDaysFragment() {
-        layout_opacity.alpha = 0F
-        layout_next_days.post {
-            layoutNextDaysHeight = layout_next_days.height
-        }
-
         replaceFragmentSafely(fragment = NextDaysFragment.create("Miami"), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
     }
 

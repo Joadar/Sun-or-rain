@@ -56,6 +56,7 @@ class NextDaysFragment :
 
     private val presenter: NextDaysPresenter by lazy { NextDaysPresenter(repository) }
     private val daysAdapter: DaysAdapter by lazy { DaysAdapter(arrayListOf(ForecastDetail()), context) }
+    private lateinit var currentForecast: Forecast
 
     override var layoutId: Int = R.layout.fragment_next_days
 
@@ -67,15 +68,30 @@ class NextDaysFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecycler()
-        arguments?.let {
-            if (it.getString(ARGS_CITY_NAME, null) == null)
-                presenter.getWeekWeather(it.getDouble(ARGS_LAT), it.getDouble(ARGS_LON))
-            else
-                presenter.getWeekWeather(it.getString(ARGS_CITY_NAME))
+        if (savedInstanceState == null) {
+            arguments?.let {
+                if (it.getString(ARGS_CITY_NAME, null) == null)
+                    presenter.getWeekWeather(it.getDouble(ARGS_LAT), it.getDouble(ARGS_LON))
+                else
+                    presenter.getWeekWeather(it.getString(ARGS_CITY_NAME))
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable("currentForecast", currentForecast)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let {
+            displayWeekWeather(it.getSerializable("currentForecast") as Forecast)
         }
     }
 
     override fun displayWeekWeather(data: Forecast) {
+        currentForecast = data
         daysAdapter.add(data.list)
     }
 
