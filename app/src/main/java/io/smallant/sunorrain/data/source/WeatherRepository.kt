@@ -29,21 +29,17 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
         }
     }
 
-    override fun getCurrentWeather(city: String): Observable<Weather> {
-        return manageCurrentWeather(remoteDataSource.getCurrentWeather(city))
-    }
+    override fun getCurrentWeather(city: String) =
+            manageCurrentWeather(remoteDataSource.getCurrentWeather(city))
 
-    override fun getCurrentWeather(latitude: Double, longitude: Double): Observable<Weather> {
-        return manageCurrentWeather(remoteDataSource.getCurrentWeather(latitude, longitude))
-    }
+    override fun getCurrentWeather(latitude: Double, longitude: Double) =
+            manageCurrentWeather(remoteDataSource.getCurrentWeather(latitude, longitude))
 
-    override fun getWeekWeather(city: String): Observable<Forecast> {
-        return manageWeekWeather(remoteDataSource.getWeekWeather(city))
-    }
+    override fun getWeekWeather(city: String): Observable<Forecast> =
+            manageWeekWeather(remoteDataSource.getWeekWeather(city))
 
-    override fun getWeekWeather(latitude: Double, longitude: Double): Observable<Forecast> {
-        return manageWeekWeather(remoteDataSource.getWeekWeather(latitude, longitude))
-    }
+    override fun getWeekWeather(latitude: Double, longitude: Double) =
+            manageWeekWeather(remoteDataSource.getWeekWeather(latitude, longitude))
 
     fun refreshWeatherDay() {
         isCurrentWeatherCacheDirty = true

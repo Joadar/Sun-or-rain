@@ -26,10 +26,8 @@ class DaysAdapter(private var items: List<ForecastDetail>, private val context: 
 
     override fun getItemCount() = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DayViewHolder {
-        val view = LayoutInflater.from(parent?.context).inflate(R.layout.item_day, parent, false)
-        return DayViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) =
+            DayViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_day, parent, false))
 
     fun add(items: List<ForecastDetail>) {
         this.items = items
