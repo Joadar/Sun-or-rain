@@ -55,15 +55,15 @@ data class ForecastDetail(
 )
 
 data class Temperature(
-        val day: Float,
-        val min: Float,
-        val max: Float,
-        val night: Float,
-        val eve: Float,
-        val morn: Float,
-        val temp: Float,
-        val temp_min: Float,
-        val temp_max: Float
+        val day: Double,
+        val min: Double,
+        val max: Double,
+        val night: Double,
+        val eve: Double,
+        val morn: Double,
+        val temp: Double,
+        val temp_min: Double,
+        val temp_max: Double
 )
 
 data class City(

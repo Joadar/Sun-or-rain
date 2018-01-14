@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.smallant.sunorrain.R
 import io.smallant.sunorrain.data.models.ForecastDetail
+import io.smallant.sunorrain.extensions.toCeil
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,7 +19,7 @@ class DaysAdapter(private var items: List<ForecastDetail>) : RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: DayViewHolder?, position: Int) {
         val weather = items[position]
-        holder?.temperature?.text = "${Math.ceil(weather.temp?.day?.toDouble() ?: 0.0).toInt()}°C" // TODO : move to an Extension class
+        holder?.temperature?.text = "${weather.temp?.day?.toCeil}°C"
         holder?.icon?.setImageResource(weather.icon)
         holder?.date?.text = day(weather.dt)
     }

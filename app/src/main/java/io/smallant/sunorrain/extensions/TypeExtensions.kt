@@ -7,3 +7,6 @@ val Int.toPx: Int
 
 val Int.toDp: Int
     get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+val Double?.toCeil: Int
+    get() = Math.ceil(this ?: 0.0).toInt()
