@@ -129,7 +129,7 @@ class HomeActivity :
         if (searchVisible) {
             layout_search.visible()
         }
-        displayWeatherInfos(savedInstanceState?.getSerializable("currentWeather") as Weather, true)
+        displayWeatherInfos(savedInstanceState?.getSerializable("currentWeather") as Weather)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -157,7 +157,7 @@ class HomeActivity :
     }
 
     override fun displayCurrentWeather(data: Weather) {
-        displayWeatherInfos(data, false)
+        displayWeatherInfos(data)
         mapIsReady()
 
         if (!splashScreenDisplayed) {
@@ -174,7 +174,7 @@ class HomeActivity :
         }
     }
 
-    private fun displayWeatherInfos(data: Weather, refresh: Boolean) {
+    private fun displayWeatherInfos(data: Weather) {
         currentWeather = data
         val timeZone = jsonController.getTimeZone(data.sys.country)
         text_time.text = (Calendar.getInstance().timeInMillis / 1000).getHoursMinutes(timeZone)
@@ -183,9 +183,6 @@ class HomeActivity :
         text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
         text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
         image_weather.setImageResource(data.icon)
-        if (refresh) {
-            //presenter.getWeather(data.coord.lat, data.coord.lon)
-        }
     }
 
     override fun initMap() {
