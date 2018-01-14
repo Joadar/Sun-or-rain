@@ -16,6 +16,7 @@ abstract class BaseMapLocationActivity :
     private var currentLocationMarker: Marker? = null
 
     abstract fun initMap()
+    abstract fun mapIsReady()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,7 @@ abstract class BaseMapLocationActivity :
         map.setMaxZoomPreference(5F)
         map.setMinZoomPreference(5F)
         map.uiSettings.setAllGesturesEnabled(false)
+        mapIsReady()
     }
 
     protected fun addMarker(lat: Double, lon: Double, cityName: String) {

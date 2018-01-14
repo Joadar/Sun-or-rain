@@ -57,7 +57,7 @@ class HomeActivity :
     private var splashScreenDisplayed: Boolean = false
     private var toastError: Toast? = null
     private val jsonController: JsonController by lazy { JsonController(this) }
-    private lateinit var currentWeather: Weather
+    private var currentWeather: Weather? = null
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -157,9 +157,8 @@ class HomeActivity :
     }
 
     override fun displayCurrentWeather(data: Weather) {
-
-        addMarker(data.coord.lat, data.coord.lon, data.name)
         displayWeatherInfos(data, false)
+        mapIsReady()
 
         if (!splashScreenDisplayed) {
             layout_splashscreen.fadeOut()
@@ -167,6 +166,12 @@ class HomeActivity :
         }
         replaceFragmentSafely(fragment = NextDaysFragment.create(data.coord.lat, data.coord.lon), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
         hideSearch()
+    }
+
+    override fun mapIsReady() {
+        currentWeather?.let {
+            addMarker(it.coord.lat, it.coord.lon, it.name)
+        }
     }
 
     private fun displayWeatherInfos(data: Weather, refresh: Boolean) {
