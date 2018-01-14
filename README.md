@@ -1,1 +1,1 @@
-# Sun Or Rain
+# Sun or rain

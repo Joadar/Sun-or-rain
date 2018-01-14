@@ -2,7 +2,7 @@
     <string name="app_name">Sun or rain</string>
     <string name="package_name" translatable="false">io.smallant.sunorrain</string>
 
-    <string name="title_activity_home">Sun or Rain</string>
+    <string name="title_activity_home">Sun or rain</string>
 
     <!-- Image -->
     <string name="icon_description">Weather icon</string>
