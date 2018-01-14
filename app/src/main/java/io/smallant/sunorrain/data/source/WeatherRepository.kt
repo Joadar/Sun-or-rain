@@ -1,9 +1,9 @@
 package io.smallant.sunorrain.data.source
 
 import io.reactivex.Observable
-import io.smallant.sunorrain.R
 import io.smallant.sunorrain.data.models.Forecast
 import io.smallant.sunorrain.data.models.Weather
+import io.smallant.sunorrain.extensions.checkIcon
 import java.util.*
 
 /**
@@ -66,7 +66,7 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
             calendar.time = date
 
             currentWeather = it
-            currentWeather?.icon = checkIcon(it.weather[0].description, calendar.get(Calendar.HOUR_OF_DAY))
+            currentWeather?.icon = it.weather[0].description.checkIcon(calendar.get(Calendar.HOUR_OF_DAY))
         }.doOnComplete {
             isCurrentWeatherCacheDirty = false
         }
@@ -81,33 +81,10 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
         }.doOnNext {
             weekWeather = it
             weekWeather?.list?.map {
-                it.icon = checkIcon(it.weather[0].description, 12)
+                it.icon = it.weather[0].description.checkIcon(12)
             }
         }.doOnComplete {
             isWeekWeatherCacheDirty = false
-        }
-    }
-
-    private fun checkIcon(name: String, hour: Int): Int {
-        when (name) {
-            "light rain" -> return R.drawable.light_rain
-            "moderate rain" -> return R.drawable.moderate_rain
-            "few clouds" -> return R.drawable.cloudly
-            "thunderstorm" -> return R.drawable.storm
-            "mist" -> return R.drawable.fog_day
-            else -> {
-                if (name.contains("clouds")) return R.drawable.clouds
-                else if (name.contains("rain")) return R.drawable.rain
-                else if (name.contains("snow")) return R.drawable.snow
-                else if (name == "clear sky") {
-                    if (hour >= 18 || hour < 7) {
-                        return R.drawable.moon
-                    } else {
-                        R.drawable.sun
-                    }
-                }
-                return R.drawable.sun
-            }
         }
     }
 }
