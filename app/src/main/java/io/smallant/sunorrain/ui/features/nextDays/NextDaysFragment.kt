@@ -55,7 +55,7 @@ class NextDaysFragment :
     }
 
     private val presenter: NextDaysPresenter by lazy { NextDaysPresenter(repository) }
-    private val daysAdapter: DaysAdapter by lazy { DaysAdapter(arrayListOf(ForecastDetail())) }
+    private val daysAdapter: DaysAdapter by lazy { DaysAdapter(arrayListOf(ForecastDetail()), context) }
 
     override var layoutId: Int = R.layout.fragment_next_days
 

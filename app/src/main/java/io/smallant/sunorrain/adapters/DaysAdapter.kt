@@ -1,5 +1,6 @@
 package io.smallant.sunorrain.adapters
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +16,11 @@ import java.util.*
 /**
  * Created by jpannetier on 09/01/2018.
  */
-class DaysAdapter(private var items: List<ForecastDetail>) : RecyclerView.Adapter<DaysAdapter.DayViewHolder>() {
+class DaysAdapter(private var items: List<ForecastDetail>, private val context: Context?) : RecyclerView.Adapter<DaysAdapter.DayViewHolder>() {
 
     override fun onBindViewHolder(holder: DayViewHolder?, position: Int) {
         val weather = items[position]
-        holder?.temperature?.text = "${weather.temp?.day?.toCeil}°C"
+        holder?.temperature?.text = context?.resources?.getString(R.string.temperature, weather.temp?.day?.toCeil, "C")
         holder?.icon?.setImageResource(weather.icon)
         holder?.date?.text = day(weather.dt)
     }

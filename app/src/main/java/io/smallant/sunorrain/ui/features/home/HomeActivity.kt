@@ -207,7 +207,7 @@ class HomeActivity :
 
         addMarker(data.coord.lat, data.coord.lon, data.name)
         text_time.text = getHoursMinutes(Calendar.getInstance().timeInMillis / 1000, timeZone)
-        text_temperature.text = "${data.main.temp.toCeil}°"
+        text_temperature.text = resources.getString(R.string.temperature, data.main.temp.toCeil, "")
         text_humidity.text = "${data.main.humidity}%"
         text_sunrise.text = getHoursMinutes(data.sys.sunrise, timeZone)
         text_sunset.text = getHoursMinutes(data.sys.sunset, timeZone)
