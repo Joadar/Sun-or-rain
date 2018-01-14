@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="font_brandon_light" translatable="false">fonts/Brandon_light.otf</string>
+    <string name="font_brandon_thin" translatable="false">fonts/Brandon_thin.otf</string>
+    <string name="font_brandon_reg" translatable="false">fonts/Brandon_reg.otf</string>
+    <string name="font_brandon_bld" translatable="false">fonts/Brandon_bld.otf</string>
+    <string name="font_brandon_med" translatable="false">fonts/Brandon_med.otf</string>
+
+    <string name="font_lato_light" translatable="false">fonts/Lato-Light.otf</string>
+    <string name="font_lato_regular" translatable="false">fonts/Lato-Regular.otf</string>
+
+</resources>
