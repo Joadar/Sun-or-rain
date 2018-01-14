@@ -10,8 +10,7 @@ import android.widget.TextView
 import io.smallant.sunorrain.R
 import io.smallant.sunorrain.data.models.ForecastDetail
 import io.smallant.sunorrain.extensions.toCeil
-import java.text.SimpleDateFormat
-import java.util.*
+import io.smallant.sunorrain.extensions.toDay
 
 /**
  * Created by jpannetier on 09/01/2018.
@@ -22,35 +21,7 @@ class DaysAdapter(private var items: List<ForecastDetail>, private val context: 
         val weather = items[position]
         holder?.temperature?.text = context?.resources?.getString(R.string.temperature, weather.temp?.day?.toCeil, "C")
         holder?.icon?.setImageResource(weather.icon)
-        holder?.date?.text = day(weather.dt)
-    }
-
-    // TODO: move to an Extension class
-    private fun day(time: Long): String {
-        val dayNumero = SimpleDateFormat("DD", Locale.getDefault()).format(time * 1000)
-        val dayName = SimpleDateFormat("EEEE", Locale.getDefault()).format(time * 1000)
-        return checkDay(time, dayName, dayNumero)
-    }
-
-    private fun checkDay(time: Long, dayName: String, dayNumero: String): String {
-        val epochInMillis = time * 1000
-        val now = Calendar.getInstance()
-        val timeToCheckToday = Calendar.getInstance()
-        timeToCheckToday.timeInMillis = epochInMillis
-
-        val timeToCheckTomorrow = Calendar.getInstance()
-        timeToCheckTomorrow.add(Calendar.DAY_OF_YEAR, 1)
-
-        return when (timeToCheckToday.get(Calendar.DAY_OF_YEAR)) {
-            now.get(Calendar.DAY_OF_YEAR) -> {
-                if (now.get(Calendar.HOUR_OF_DAY) > 19)
-                    "Tonight"
-                else
-                    "Today"
-            }
-            timeToCheckTomorrow.get(Calendar.DAY_OF_YEAR) -> "Tomorrow"
-            else -> "${dayName.capitalize()}, $dayNumero"
-        }
+        holder?.date?.text = weather.dt.toDay
     }
 
     override fun getItemCount() = items.size

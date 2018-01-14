@@ -1,6 +1,7 @@
 package io.smallant.sunorrain.extensions
 
 import io.smallant.sunorrain.R
+import java.text.SimpleDateFormat
 import java.util.*
 
 val Double?.toCeil: Int
@@ -41,4 +42,32 @@ fun Long.calendarFromTimeZone(timeZone: String): Calendar {
     val calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone), Locale.getDefault())
     calendar.time = date
     return calendar
+}
+
+val Long.toDay: String
+    get() {
+        val dayNumero = SimpleDateFormat("DD", Locale.getDefault()).format(this * 1000)
+        val dayName = SimpleDateFormat("EEEE", Locale.getDefault()).format(this * 1000)
+        return this.checkDay(dayName, dayNumero)
+    }
+
+fun Long.checkDay(dayName: String, dayNumero: String): String {
+    val epochInMillis = this * 1000
+    val now = Calendar.getInstance()
+    val timeToCheckToday = Calendar.getInstance()
+    timeToCheckToday.timeInMillis = epochInMillis
+
+    val timeToCheckTomorrow = Calendar.getInstance()
+    timeToCheckTomorrow.add(Calendar.DAY_OF_YEAR, 1)
+
+    return when (timeToCheckToday.get(Calendar.DAY_OF_YEAR)) {
+        now.get(Calendar.DAY_OF_YEAR) -> {
+            if (now.get(Calendar.HOUR_OF_DAY) > 19)
+                "Tonight"
+            else
+                "Today"
+        }
+        timeToCheckTomorrow.get(Calendar.DAY_OF_YEAR) -> "Tomorrow"
+        else -> "${dayName.capitalize()}, $dayNumero"
+    }
 }
