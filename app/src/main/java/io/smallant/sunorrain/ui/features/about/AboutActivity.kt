@@ -29,6 +29,7 @@ class AboutActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.slide_up, android.R.anim.fade_out)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -36,11 +37,19 @@ class AboutActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
-            finish()
-            return true
+        when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+                overridePendingTransition(0, R.anim.slide_down)
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(0, R.anim.slide_down)
     }
 
     class AboutFragment : PreferenceFragmentCompat() {
