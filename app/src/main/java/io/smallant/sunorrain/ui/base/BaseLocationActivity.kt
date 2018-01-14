@@ -79,10 +79,11 @@ abstract class BaseLocationActivity :
 
     @SuppressLint("MissingPermission")
     private fun requestLocation() {
-        locationManager.requestLocationUpdates(
+        /*locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
                 MIN_TIME_BW_UPDATES,
                 MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                this)
+                this)*/
+        onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER))
     }
 }
