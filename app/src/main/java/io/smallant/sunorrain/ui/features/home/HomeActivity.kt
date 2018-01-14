@@ -1,17 +1,10 @@
 package io.smallant.sunorrain.ui.features.home
 
-import android.Manifest
 import android.animation.Animator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -32,7 +25,7 @@ import io.smallant.sunorrain.extensions.*
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.JsonController
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
-import io.smallant.sunorrain.ui.base.BaseActivity
+import io.smallant.sunorrain.ui.base.BaseLocationActivity
 import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.*
@@ -40,9 +33,8 @@ import java.util.*
 
 @SuppressLint("ShowToast")
 class HomeActivity :
-        BaseActivity(),
+        BaseLocationActivity(),
         OnMapReadyCallback,
-        LocationListener,
         HomeContract.View {
 
     /**
@@ -75,18 +67,6 @@ class HomeActivity :
      * SEARCH
      */
     private val menuItem by lazy { findViewById<View>(R.id.action_search) }
-
-    /**
-     * USER LOCATION
-     */
-
-    private val locationManager: LocationManager by lazy { getSystemService(Context.LOCATION_SERVICE) as LocationManager }
-
-    private val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 10F
-    private val MIN_TIME_BW_UPDATES = (1000 * 60 * 1).toLong()
-    private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 101
-    private var currentLatitude: Double = 0.0
-    private var currentLongitude: Double = 0.0
 
     /**
      * OTHER
@@ -250,27 +230,6 @@ class HomeActivity :
      * USER LOCATION
      */
 
-    private fun manageUserLocation() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
-        } else {
-            requestLocation()
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun requestLocation() {
-        locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                MIN_TIME_BW_UPDATES,
-                MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                this)
-    }
-
     private fun addMarker(lat: Double, lon: Double, cityName: String) {
         currentLocationMarker?.remove()
         currentLocationMarker = map.addMarker(MarkerOptions().position(LatLng(lat, lon)).title(cityName))
@@ -283,45 +242,8 @@ class HomeActivity :
         map.moveCamera(CameraUpdateFactory.newLatLng(camera))
     }
 
-    override fun onResume() {
-        super.onResume()
-        manageUserLocation()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        locationManager.removeUpdates(this)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (permissions.isEmpty())
-            return
-
-        when (requestCode) {
-            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
-                if (grantResults.isNotEmpty()) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        // Denied
-                        finish()
-                    } else {
-                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            requestLocation()
-                        } else {
-                            // Bob never checked click
-                        }
-                    }
-                }
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-    override fun onProviderEnabled(provider: String?) {}
-    override fun onProviderDisabled(provider: String?) {}
     override fun onLocationChanged(location: Location) {
-        currentLatitude = location.latitude
-        currentLongitude = location.longitude
+        super.onLocationChanged(location)
         presenter.getWeather(location.latitude, location.longitude)
     }
 
