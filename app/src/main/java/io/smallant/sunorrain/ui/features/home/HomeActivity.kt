@@ -11,13 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import io.smallant.sunorrain.R
 import io.smallant.sunorrain.SORApplication.Companion.repository
 import io.smallant.sunorrain.data.models.Weather
@@ -25,7 +19,7 @@ import io.smallant.sunorrain.extensions.*
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.JsonController
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
-import io.smallant.sunorrain.ui.base.BaseLocationActivity
+import io.smallant.sunorrain.ui.base.BaseMapLocationActivity
 import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.*
@@ -33,15 +27,8 @@ import java.util.*
 
 @SuppressLint("ShowToast")
 class HomeActivity :
-        BaseLocationActivity(),
-        OnMapReadyCallback,
+        BaseMapLocationActivity(),
         HomeContract.View {
-
-    /**
-     * MAP
-     */
-    private lateinit var map: GoogleMap
-    private var currentLocationMarker: Marker? = null
 
     /**
      * SEARCH
@@ -49,6 +36,7 @@ class HomeActivity :
     private var searchVisible: Boolean = false
     private var isSearchOpening = false
     private var isSearching: Boolean = false
+    private val menuItem by lazy { findViewById<View>(R.id.action_search) }
 
     /**
      * NEXT DAYS TRANSITION
@@ -64,11 +52,6 @@ class HomeActivity :
     private val nextDaysHeightVisible: Int by lazy { resources.getDimensionPixelSize(R.dimen.next_days_height_visible) }
 
     /**
-     * SEARCH
-     */
-    private val menuItem by lazy { findViewById<View>(R.id.action_search) }
-
-    /**
      * OTHER
      */
 
@@ -76,6 +59,7 @@ class HomeActivity :
     private var splashScreenDisplayed: Boolean = false
     private var toastError: Toast? = null
     private val jsonController: JsonController by lazy { JsonController(this) }
+
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -93,7 +77,6 @@ class HomeActivity :
             //presenter.getWeather("Perpignan")
         }
 
-        initMap()
         initClickListener()
         initNextDaysFragment()
 
@@ -174,14 +157,6 @@ class HomeActivity :
             super.onBackPressed()
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-
-        map.setMaxZoomPreference(5F)
-        map.setMinZoomPreference(5F)
-        map.uiSettings.setAllGesturesEnabled(false)
-    }
-
     override fun displayCurrentWeather(data: Weather) {
         val timeZone = jsonController.getTimeZone(data.sys.country)
 
@@ -200,8 +175,7 @@ class HomeActivity :
         hideSearch()
     }
 
-    private fun initMap() {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+    override fun initMap() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
@@ -229,19 +203,6 @@ class HomeActivity :
     /**
      * USER LOCATION
      */
-
-    private fun addMarker(lat: Double, lon: Double, cityName: String) {
-        currentLocationMarker?.remove()
-        currentLocationMarker = map.addMarker(MarkerOptions().position(LatLng(lat, lon)).title(cityName))
-        currentLocationMarker?.showInfoWindow()
-        map.setOnMarkerClickListener {
-            it.showInfoWindow()
-            true
-        }
-        val camera = LatLng(lat, lon - 4.75)
-        map.moveCamera(CameraUpdateFactory.newLatLng(camera))
-    }
-
     override fun onLocationChanged(location: Location) {
         super.onLocationChanged(location)
         presenter.getWeather(location.latitude, location.longitude)
