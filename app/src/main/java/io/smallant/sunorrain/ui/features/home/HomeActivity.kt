@@ -3,6 +3,7 @@ package io.smallant.sunorrain.ui.features.home
 import android.animation.Animator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.view.Menu
@@ -16,6 +17,7 @@ import io.smallant.sunorrain.R
 import io.smallant.sunorrain.SORApplication.Companion.repository
 import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.extensions.*
+import io.smallant.sunorrain.helpers.AppConstant
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.JsonController
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
@@ -60,7 +62,6 @@ class HomeActivity :
     private var toastError: Toast? = null
     private val jsonController: JsonController by lazy { JsonController(this) }
     private var currentWeather: Weather? = null
-    private var fromSettings = false
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -119,23 +120,6 @@ class HomeActivity :
         return super.dispatchTouchEvent(event)
     }
 
-/*    override fun onResume() {
-        super.onResume()
-        currentWeather?.let {
-            if(fromSettings) {
-                // TODO: check if the user came from SettingsActivity to make these action
-                changeTemperatureSymbol()
-                it.main.temp = if (preferences.unitOfMeasure == getString(R.string.imperial))
-                    it.main.temp.convertCelciusToFahrenheit()
-                else
-                    it.main.temp.convertFahrenheitToCelcius()
-            }
-            // TODO: END
-
-            displayWeatherInfos(it)
-        }
-    }*/
-
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBoolean("searchVisible", searchVisible)
@@ -144,7 +128,6 @@ class HomeActivity :
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        //fromSettings = false
         searchVisible = savedInstanceState?.getBoolean("searchVisible") == true
         if (searchVisible) {
             layout_search.visible()
@@ -174,12 +157,28 @@ class HomeActivity :
                 return true
             }
             R.id.action_settings -> {
-                //fromSettings = true
-                SettingsActivity.create(this)
+                startActivityForResult(Intent(this, SettingsActivity::class.java), AppConstant.REQUEST_CODE_SETTINGS)
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == AppConstant.REQUEST_CODE_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                currentWeather?.let {
+                    changeTemperatureSymbol()
+                    it.main.temp = if (preferences.unitOfMeasure == getString(R.string.imperial))
+                        it.main.temp.convertCelciusToFahrenheit()
+                    else
+                        it.main.temp.convertFahrenheitToCelcius()
+
+                    displayWeatherInfos(it)
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {

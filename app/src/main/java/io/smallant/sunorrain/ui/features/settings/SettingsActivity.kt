@@ -12,8 +12,9 @@ import io.smallant.sunorrain.ui.base.BaseActivity
 /**
  * Created by jpannetier on 15/01/2018.
  */
-class SettingsActivity : BaseActivity(){
+class SettingsActivity : BaseActivity() {
     private val settingsFragment: SettingsFragment by lazy { SettingsFragment() }
+    private lateinit var oldUnit: String
 
     companion object {
         fun create(context: Context) {
@@ -29,11 +30,18 @@ class SettingsActivity : BaseActivity(){
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         replaceFragmentSafely(fragment = settingsFragment, containerViewId = R.id.settings_container, tag = "settings_container")
+        oldUnit = preferences.unitOfMeasure
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
+                val intent = Intent()
+                if (oldUnit != preferences.unitOfMeasure) {
+                    setResult(RESULT_OK, intent)
+                } else {
+                    setResult(RESULT_CANCELED, intent)
+                }
                 finish()
                 overridePendingTransition(0, R.anim.slide_down)
                 return true
