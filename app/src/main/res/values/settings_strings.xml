@@ -2,10 +2,12 @@
 <resources>
     <string name="key_unit_measure" translatable="false">unit_measure</string>
     <string name="text_unit_measure">Unit of measure</string>
+    <string name="metric">metric</string>
+    <string name="imperial">imperial</string>
 
     <string-array name="unit_measure_values">
-        <item>metric</item>
-        <item>imperial</item>
+        <item>@string/metric</item>
+        <item>@string/imperial</item>
     </string-array>
 
     <string name="unit_measure_default">metric</string>

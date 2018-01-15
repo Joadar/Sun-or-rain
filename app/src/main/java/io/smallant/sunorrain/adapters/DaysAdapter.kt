@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.smallant.sunorrain.R
 import io.smallant.sunorrain.data.models.ForecastDetail
+import io.smallant.sunorrain.data.source.local.PreferencesController
 import io.smallant.sunorrain.extensions.toCeil
 import io.smallant.sunorrain.extensions.toDay
 
@@ -17,9 +18,15 @@ import io.smallant.sunorrain.extensions.toDay
  */
 class DaysAdapter(private var items: List<ForecastDetail>, private val context: Context?) : RecyclerView.Adapter<DaysAdapter.DayViewHolder>() {
 
+    private val preferences: PreferencesController by lazy {PreferencesController(context!!)}
+
     override fun onBindViewHolder(holder: DayViewHolder?, position: Int) {
         val weather = items[position]
-        holder?.temperature?.text = context?.resources?.getString(R.string.temperature, weather.temp?.day?.toCeil, "C")
+        val temperatureSymbol: String =
+                if(preferences.unitOfMeasure == context?.getString(R.string.imperial)) context.getString(R.string.temperature_imperial)
+                else context?.getString(R.string.temperature_metrics) ?: ""
+
+        holder?.temperature?.text = context?.resources?.getString(R.string.temperature, weather.temp?.day?.toCeil, temperatureSymbol)
         holder?.icon?.setImageResource(weather.icon)
         holder?.date?.text = weather.dt.toDay
     }

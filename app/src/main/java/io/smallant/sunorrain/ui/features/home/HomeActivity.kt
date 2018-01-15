@@ -193,6 +193,12 @@ class HomeActivity :
         text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
         text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
         image_weather.setImageResource(data.icon)
+
+        text_temperature_symbol.text =
+                if(preferences.unitOfMeasure == getString(R.string.imperial))
+                    getString(R.string.temperature_imperial)
+                else
+                    getString(R.string.temperature_metrics)
     }
 
     override fun initMap() {
