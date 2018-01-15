@@ -3,6 +3,7 @@ package io.smallant.sunorrain.ui.features.home
 import android.animation.Animator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.view.Menu
@@ -16,12 +17,14 @@ import io.smallant.sunorrain.R
 import io.smallant.sunorrain.SORApplication.Companion.repository
 import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.extensions.*
+import io.smallant.sunorrain.helpers.AppConstant
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.JsonController
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
 import io.smallant.sunorrain.ui.base.BaseMapLocationActivity
 import io.smallant.sunorrain.ui.features.about.AboutActivity
 import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
+import io.smallant.sunorrain.ui.features.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.*
 
@@ -37,7 +40,7 @@ class HomeActivity :
     private var searchVisible: Boolean = false
     private var isSearchOpening = false
     private var isSearching: Boolean = false
-    private val menuItem by lazy { findViewById<View>(R.id.action_search) }
+    private var searchItem: MenuItem? = null
 
     /**
      * NEXT DAYS TRANSITION
@@ -117,7 +120,6 @@ class HomeActivity :
         return super.dispatchTouchEvent(event)
     }
 
-
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putBoolean("searchVisible", searchVisible)
@@ -130,11 +132,15 @@ class HomeActivity :
         if (searchVisible) {
             layout_search.visible()
         }
-        displayWeatherInfos(savedInstanceState?.getSerializable("currentWeather") as Weather)
+        currentWeather = savedInstanceState?.getSerializable("currentWeather") as Weather
+        currentWeather?.let {
+            displayWeatherInfos(it)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home, menu)
+        searchItem = menu?.findItem(R.id.action_search)
         return true
     }
 
@@ -150,8 +156,33 @@ class HomeActivity :
                 AboutActivity.create(this)
                 return true
             }
+            R.id.action_settings -> {
+                startActivityForResult(Intent(this, SettingsActivity::class.java), AppConstant.REQUEST_CODE_SETTINGS)
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == AppConstant.REQUEST_CODE_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                currentWeather?.let {
+                    changeTemperatureSymbol()
+                    it.main.temp = if (preferences.unitOfMeasure == getString(R.string.imperial))
+                        it.main.temp.convertCelciusToFahrenheit()
+                    else
+                        it.main.temp.convertFahrenheitToCelcius()
+
+                    displayWeatherInfos(it)
+                    val nextDaysFragment = supportFragmentManager.findFragmentById(R.id.layout_next_days)
+                    if (nextDaysFragment is NextDaysFragment) {
+                        nextDaysFragment.updateTemperature()
+                    }
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -188,6 +219,15 @@ class HomeActivity :
         text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
         text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
         image_weather.setImageResource(data.icon)
+        changeTemperatureSymbol()
+    }
+
+    private fun changeTemperatureSymbol() {
+        text_temperature_symbol.text =
+                if (preferences.unitOfMeasure == getString(R.string.imperial))
+                    getString(R.string.temperature_imperial)
+                else
+                    getString(R.string.temperature_metrics)
     }
 
     override fun initMap() {
@@ -213,7 +253,7 @@ class HomeActivity :
      */
     override fun onLocationChanged(location: Location) {
         super.onLocationChanged(location)
-        presenter.getWeather(location.latitude, location.longitude)
+        presenter.getWeather(location.latitude, location.longitude, preferences.unitOfMeasure)
     }
 
     /**
@@ -227,15 +267,19 @@ class HomeActivity :
 
     private fun onSearchWeatherClick() {
         if (!input_city.text.isNullOrEmpty()) {
-            presenter.getWeather(input_city.text.toString())
-            hideKeyboard()
-            isSearching = true
-            button_current_location.isEnabled = !isSearching
-            button_search.invisible()
-            progress.visible()
+            presenter.getWeather(input_city.text.toString(), preferences.unitOfMeasure)
+            viewActionsOnSearchWeatherClicked()
         } else {
             displayToast("Enter a city before clicking on search button :)")
         }
+    }
+
+    private fun viewActionsOnSearchWeatherClicked() {
+        hideKeyboard()
+        isSearching = true
+        button_current_location.isEnabled = !isSearching
+        button_search.invisible()
+        progress.visible()
     }
 
     private fun manageSearchActions() {
@@ -244,7 +288,8 @@ class HomeActivity :
         }
 
         button_current_location.setOnClickListener {
-            presenter.getWeather(currentLatitude, currentLongitude)
+            presenter.getWeather(currentLatitude, currentLongitude, preferences.unitOfMeasure)
+            viewActionsOnSearchWeatherClicked()
         }
 
         input_city.setOnEditorActionListener { _, actionId, _ ->
@@ -259,8 +304,8 @@ class HomeActivity :
 
     @TargetApi(21)
     private fun displaySearch() {
-        menuItem?.let {
-            CircularRevealCompat.circularReveal(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
+        searchItem?.let {
+            CircularRevealCompat.circularReveal(layout_search, findViewById<View>(R.id.action_search), main_layout, object : SimpleAnimatorListener() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     isSearchOpening = true
@@ -278,8 +323,8 @@ class HomeActivity :
 
     @TargetApi(21)
     private fun hideSearch() {
-        menuItem?.let {
-            CircularRevealCompat.circularHide(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
+        searchItem?.let {
+            CircularRevealCompat.circularHide(layout_search, findViewById<View>(R.id.action_search), main_layout, object : SimpleAnimatorListener() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     isSearchOpening = true

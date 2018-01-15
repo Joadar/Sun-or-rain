@@ -9,23 +9,23 @@ val Double?.toCeil: Int
 
 fun String.checkIcon(hour: Int): Int {
     when (this) {
-        "light rain" -> return R.drawable.light_rain
-        "moderate rain" -> return R.drawable.moderate_rain
-        "few clouds" -> return R.drawable.cloudly
-        "thunderstorm" -> return R.drawable.storm
-        "mist" -> return R.drawable.fog_day
+        "light rain" -> return R.drawable.ic_light_rain
+        "moderate rain" -> return R.drawable.ic_moderate_rain
+        "few clouds" -> return R.drawable.ic_cloudy
+        "thunderstorm" -> return R.drawable.ic_storm
+        "mist" -> return R.drawable.ic_mist
         else -> {
-            if (this.contains("clouds")) return R.drawable.clouds
-            else if (this.contains("rain")) return R.drawable.rain
-            else if (this.contains("snow")) return R.drawable.snow
+            if (this.contains("clouds")) return R.drawable.ic_clouds
+            else if (this.contains("rain")) return R.drawable.ic_heavy_rain
+            else if (this.contains("snow")) return R.drawable.ic_snow
             else if (this == "clear sky") {
                 if (hour >= 18 || hour < 7) {
-                    return R.drawable.moon
+                    return R.drawable.ic_moon
                 } else {
-                    R.drawable.sun
+                    R.drawable.ic_sunny
                 }
             }
-            return R.drawable.sun
+            return R.drawable.ic_sunny
         }
     }
 }
@@ -71,3 +71,9 @@ fun Long.checkDay(dayName: String, dayNumero: String): String {
         else -> "${dayName.capitalize()}, $dayNumero"
     }
 }
+
+// Converts to celcius
+fun Double.convertFahrenheitToCelcius() = (this - 32) * 5 / 9
+
+// Converts to fahrenheit
+fun Double.convertCelciusToFahrenheit() = this* 9 / 5 + 32

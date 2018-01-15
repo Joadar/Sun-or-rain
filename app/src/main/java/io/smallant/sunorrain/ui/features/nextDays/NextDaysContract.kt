@@ -9,7 +9,7 @@ interface NextDaysContract {
     }
 
     interface Presenter {
-        fun getWeekWeather(city: String, refresh: Boolean = true)
-        fun getWeekWeather(latitude: Double, longitude: Double, refresh: Boolean = true)
+        fun getWeekWeather(city: String, units: String, refresh: Boolean = true)
+        fun getWeekWeather(latitude: Double, longitude: Double, units: String, refresh: Boolean = true)
     }
 }

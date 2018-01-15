@@ -8,6 +8,8 @@ import io.smallant.sunorrain.SORApplication.Companion.repository
 import io.smallant.sunorrain.adapters.DaysAdapter
 import io.smallant.sunorrain.data.models.Forecast
 import io.smallant.sunorrain.data.models.ForecastDetail
+import io.smallant.sunorrain.extensions.convertCelciusToFahrenheit
+import io.smallant.sunorrain.extensions.convertFahrenheitToCelcius
 import io.smallant.sunorrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_next_days.*
 
@@ -56,7 +58,7 @@ class NextDaysFragment :
 
     private val presenter: NextDaysPresenter by lazy { NextDaysPresenter(repository) }
     private val daysAdapter: DaysAdapter by lazy { DaysAdapter(arrayListOf(ForecastDetail()), context) }
-    private lateinit var currentForecast: Forecast
+    private var currentForecast: Forecast? = null
 
     override var layoutId: Int = R.layout.fragment_next_days
 
@@ -71,10 +73,23 @@ class NextDaysFragment :
         if (savedInstanceState == null) {
             arguments?.let {
                 if (it.getString(ARGS_CITY_NAME, null) == null)
-                    presenter.getWeekWeather(it.getDouble(ARGS_LAT), it.getDouble(ARGS_LON))
+                    presenter.getWeekWeather(it.getDouble(ARGS_LAT), it.getDouble(ARGS_LON), preferences.unitOfMeasure)
                 else
-                    presenter.getWeekWeather(it.getString(ARGS_CITY_NAME))
+                    presenter.getWeekWeather(it.getString(ARGS_CITY_NAME), preferences.unitOfMeasure)
             }
+        }
+    }
+
+    fun updateTemperature() {
+        currentForecast?.let {
+            it.list = it.list.map { weather ->
+                weather.temp!!.day = if (preferences.unitOfMeasure == getString(R.string.imperial))
+                    weather.temp.day.convertCelciusToFahrenheit()
+                else
+                    weather.temp.day.convertFahrenheitToCelcius()
+                weather
+            }
+            displayWeekWeather(it)
         }
     }
 

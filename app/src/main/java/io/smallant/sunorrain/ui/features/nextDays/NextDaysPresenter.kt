@@ -9,11 +9,11 @@ class NextDaysPresenter(private val repository: WeatherRepository) : NextDaysCon
 
     var view: NextDaysContract.View? = null
 
-    override fun getWeekWeather(city: String, refresh: Boolean) {
+    override fun getWeekWeather(city: String, units: String, refresh: Boolean) {
         if (refresh)
             repository.refreshWeekWeather()
 
-        repository.getWeekWeather(city)
+        repository.getWeekWeather(city, units)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
@@ -24,11 +24,11 @@ class NextDaysPresenter(private val repository: WeatherRepository) : NextDaysCon
                 })
     }
 
-    override fun getWeekWeather(latitude: Double, longitude: Double, refresh: Boolean) {
+    override fun getWeekWeather(latitude: Double, longitude: Double, units: String, refresh: Boolean) {
         if (refresh)
             repository.refreshWeekWeather()
 
-        repository.getWeekWeather(latitude, longitude)
+        repository.getWeekWeather(latitude, longitude, units)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({

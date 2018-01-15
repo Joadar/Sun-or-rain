@@ -47,22 +47,22 @@ class WeatherService {
         api = retrofit.create(API::class.java)
     }
 
-    fun getCurrentWeather(city: String) = api.getCurrentWeather(city)
-    fun getCurrentWeather(lat: Double, lon: Double) = api.getCurrentWeather(lat, lon)
-    fun getWeatherWeek(city: String) = api.getWeatherWeek(city)
-    fun getWeatherWeek(lat: Double, lon: Double) = api.getWeatherWeek(lat, lon)
+    fun getCurrentWeather(city: String, units: String) = api.getCurrentWeather(city, units)
+    fun getCurrentWeather(lat: Double, lon: Double, units: String) = api.getCurrentWeather(lat, lon, units)
+    fun getWeatherWeek(city: String, units: String) = api.getWeatherWeek(city, units)
+    fun getWeatherWeek(lat: Double, lon: Double, units: String) = api.getWeatherWeek(lat, lon, units)
 
     interface API {
-        @GET("data/2.5/weather?mode=json&units=metric")
-        fun getCurrentWeather(@Query("q") query: String): Observable<Weather>
+        @GET("data/2.5/weather?mode=json")
+        fun getCurrentWeather(@Query("q") query: String, @Query("units") units: String): Observable<Weather>
 
-        @GET("data/2.5/weather?mode=json&units=metric")
-        fun getCurrentWeather(@Query("lat") lat: Double, @Query("lon") lon: Double): Observable<Weather>
+        @GET("data/2.5/weather?mode=json")
+        fun getCurrentWeather(@Query("lat") lat: Double, @Query("lon") lon: Double, @Query("units") units: String): Observable<Weather>
 
-        @GET("data/2.5/forecast/daily?mode=json&units=metric&cnt=7")
-        fun getWeatherWeek(@Query("q") query: String): Observable<Forecast>
+        @GET("data/2.5/forecast/daily?mode=json&cnt=7")
+        fun getWeatherWeek(@Query("q") query: String, @Query("units") units: String): Observable<Forecast>
 
-        @GET("data/2.5/forecast/daily?mode=json&units=metric&cnt=7")
-        fun getWeatherWeek(@Query("lat") lat: Double, @Query("lon") lon: Double): Observable<Forecast>
+        @GET("data/2.5/forecast/daily?mode=json&cnt=7")
+        fun getWeatherWeek(@Query("lat") lat: Double, @Query("lon") lon: Double, @Query("units") units: String): Observable<Forecast>
     }
 }

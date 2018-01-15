@@ -10,8 +10,8 @@ import io.smallant.sunorrain.data.models.Weather
  */
 
 interface WeatherDataSource {
-    fun getCurrentWeather(city: String): Observable<Weather>
-    fun getCurrentWeather(latitude: Double, longitude: Double): Observable<Weather>
-    fun getWeekWeather(city: String): Observable<Forecast>
-    fun getWeekWeather(latitude: Double, longitude: Double): Observable<Forecast>
+    fun getCurrentWeather(city: String, units: String): Observable<Weather>
+    fun getCurrentWeather(latitude: Double, longitude: Double, units: String): Observable<Weather>
+    fun getWeekWeather(city: String, units: String): Observable<Forecast>
+    fun getWeekWeather(latitude: Double, longitude: Double, units: String): Observable<Forecast>
 }

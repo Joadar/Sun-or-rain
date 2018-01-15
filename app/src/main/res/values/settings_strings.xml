@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_unit_measure" translatable="false">unit_measure</string>
+    <string name="text_unit_measure">Unit of measure</string>
+    <string name="metric">metric</string>
+    <string name="imperial">imperial</string>
+
+    <string-array name="unit_measure_values">
+        <item>@string/metric</item>
+        <item>@string/imperial</item>
+    </string-array>
+
+    <string name="unit_measure_default">metric</string>
+
+    <string-array name="unit_measure_labels">
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+    </string-array>
+</resources>
