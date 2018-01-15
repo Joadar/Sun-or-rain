@@ -14,7 +14,7 @@ data class Weather(
 ) : Serializable
 
 data class Main(
-        val temp: Double,
+        var temp: Double,
         val pressure: Double,
         val humidity: Double,
         val temp_min: Double,

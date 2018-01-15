@@ -71,3 +71,9 @@ fun Long.checkDay(dayName: String, dayNumero: String): String {
         else -> "${dayName.capitalize()}, $dayNumero"
     }
 }
+
+// Converts to celcius
+fun Double.convertFahrenheitToCelcius() = (this - 32) * 5 / 9
+
+// Converts to fahrenheit
+fun Double.convertCelciusToFahrenheit() = this* 9 / 5 + 32

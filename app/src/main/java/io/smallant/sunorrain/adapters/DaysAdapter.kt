@@ -26,6 +26,10 @@ class DaysAdapter(private var items: List<ForecastDetail>, private val context: 
                 if(preferences.unitOfMeasure == context?.getString(R.string.imperial)) context.getString(R.string.temperature_imperial)
                 else context?.getString(R.string.temperature_metrics) ?: ""
 
+        /*val temperatureValue = if(preferences.unitOfMeasure == context?.getString(R.string.imperial))
+            weather.temp?.day?.convertCelciusToFahrenheit()?.toCeil
+        else
+            weather.temp?.day?.convertFahrenheitToCelcius()?.toCeil*/
         holder?.temperature?.text = context?.resources?.getString(R.string.temperature, weather.temp?.day?.toCeil, temperatureSymbol)
         holder?.icon?.setImageResource(weather.icon)
         holder?.date?.text = weather.dt.toDay

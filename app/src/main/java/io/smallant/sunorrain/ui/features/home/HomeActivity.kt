@@ -60,6 +60,7 @@ class HomeActivity :
     private var toastError: Toast? = null
     private val jsonController: JsonController by lazy { JsonController(this) }
     private var currentWeather: Weather? = null
+    private var fromSettings = false
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -118,6 +119,22 @@ class HomeActivity :
         return super.dispatchTouchEvent(event)
     }
 
+/*    override fun onResume() {
+        super.onResume()
+        currentWeather?.let {
+            if(fromSettings) {
+                // TODO: check if the user came from SettingsActivity to make these action
+                changeTemperatureSymbol()
+                it.main.temp = if (preferences.unitOfMeasure == getString(R.string.imperial))
+                    it.main.temp.convertCelciusToFahrenheit()
+                else
+                    it.main.temp.convertFahrenheitToCelcius()
+            }
+            // TODO: END
+
+            displayWeatherInfos(it)
+        }
+    }*/
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
@@ -127,11 +144,15 @@ class HomeActivity :
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
+        //fromSettings = false
         searchVisible = savedInstanceState?.getBoolean("searchVisible") == true
         if (searchVisible) {
             layout_search.visible()
         }
-        displayWeatherInfos(savedInstanceState?.getSerializable("currentWeather") as Weather)
+        currentWeather = savedInstanceState?.getSerializable("currentWeather") as Weather
+        currentWeather?.let {
+            displayWeatherInfos(it)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -152,6 +173,7 @@ class HomeActivity :
                 return true
             }
             R.id.action_settings -> {
+                //fromSettings = true
                 SettingsActivity.create(this)
                 return true
             }
@@ -193,7 +215,10 @@ class HomeActivity :
         text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
         text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
         image_weather.setImageResource(data.icon)
+        changeTemperatureSymbol()
+    }
 
+    private fun changeTemperatureSymbol() {
         text_temperature_symbol.text =
                 if(preferences.unitOfMeasure == getString(R.string.imperial))
                     getString(R.string.temperature_imperial)

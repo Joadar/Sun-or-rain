@@ -56,7 +56,7 @@ class NextDaysFragment :
 
     private val presenter: NextDaysPresenter by lazy { NextDaysPresenter(repository) }
     private val daysAdapter: DaysAdapter by lazy { DaysAdapter(arrayListOf(ForecastDetail()), context) }
-    private lateinit var currentForecast: Forecast
+    private var currentForecast: Forecast? = null
 
     override var layoutId: Int = R.layout.fragment_next_days
 
@@ -78,6 +78,14 @@ class NextDaysFragment :
         }
     }
 
+/*    override fun onResume() {
+        super.onResume()
+        Log.d("HomeActivityLog", "onResume Fragment")
+        currentForecast?.let {
+            displayWeekWeather(it)
+        }
+    }*/
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable("currentForecast", currentForecast)
@@ -86,6 +94,7 @@ class NextDaysFragment :
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
+            currentForecast = it.getSerializable("currentForecast") as Forecast
             displayWeekWeather(it.getSerializable("currentForecast") as Forecast)
         }
     }
