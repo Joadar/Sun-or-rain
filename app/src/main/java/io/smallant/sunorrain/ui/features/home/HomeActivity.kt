@@ -268,14 +268,18 @@ class HomeActivity :
     private fun onSearchWeatherClick() {
         if (!input_city.text.isNullOrEmpty()) {
             presenter.getWeather(input_city.text.toString(), preferences.unitOfMeasure)
-            hideKeyboard()
-            isSearching = true
-            button_current_location.isEnabled = !isSearching
-            button_search.invisible()
-            progress.visible()
+            viewActionsOnSearchWeatherClicked()
         } else {
             displayToast("Enter a city before clicking on search button :)")
         }
+    }
+
+    private fun viewActionsOnSearchWeatherClicked() {
+        hideKeyboard()
+        isSearching = true
+        button_current_location.isEnabled = !isSearching
+        button_search.invisible()
+        progress.visible()
     }
 
     private fun manageSearchActions() {
@@ -285,6 +289,7 @@ class HomeActivity :
 
         button_current_location.setOnClickListener {
             presenter.getWeather(currentLatitude, currentLongitude, preferences.unitOfMeasure)
+            viewActionsOnSearchWeatherClicked()
         }
 
         input_city.setOnEditorActionListener { _, actionId, _ ->
