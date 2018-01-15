@@ -218,7 +218,7 @@ class HomeActivity :
      */
     override fun onLocationChanged(location: Location) {
         super.onLocationChanged(location)
-        presenter.getWeather(location.latitude, location.longitude)
+        presenter.getWeather(location.latitude, location.longitude, preferences.unitOfMeasure)
     }
 
     /**
@@ -232,7 +232,7 @@ class HomeActivity :
 
     private fun onSearchWeatherClick() {
         if (!input_city.text.isNullOrEmpty()) {
-            presenter.getWeather(input_city.text.toString())
+            presenter.getWeather(input_city.text.toString(), preferences.unitOfMeasure)
             hideKeyboard()
             isSearching = true
             button_current_location.isEnabled = !isSearching
@@ -249,7 +249,7 @@ class HomeActivity :
         }
 
         button_current_location.setOnClickListener {
-            presenter.getWeather(currentLatitude, currentLongitude)
+            presenter.getWeather(currentLatitude, currentLongitude, preferences.unitOfMeasure)
         }
 
         input_city.setOnEditorActionListener { _, actionId, _ ->

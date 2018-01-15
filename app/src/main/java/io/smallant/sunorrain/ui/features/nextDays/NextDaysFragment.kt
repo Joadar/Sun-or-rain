@@ -71,9 +71,9 @@ class NextDaysFragment :
         if (savedInstanceState == null) {
             arguments?.let {
                 if (it.getString(ARGS_CITY_NAME, null) == null)
-                    presenter.getWeekWeather(it.getDouble(ARGS_LAT), it.getDouble(ARGS_LON))
+                    presenter.getWeekWeather(it.getDouble(ARGS_LAT), it.getDouble(ARGS_LON), preferences.unitOfMeasure)
                 else
-                    presenter.getWeekWeather(it.getString(ARGS_CITY_NAME))
+                    presenter.getWeekWeather(it.getString(ARGS_CITY_NAME), preferences.unitOfMeasure)
             }
         }
     }

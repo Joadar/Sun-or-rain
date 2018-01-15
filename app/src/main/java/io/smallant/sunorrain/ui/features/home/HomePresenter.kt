@@ -9,11 +9,11 @@ class HomePresenter(private val repository: WeatherRepository) : HomeContract.Pr
 
     var view: HomeContract.View? = null
 
-    override fun getWeather(city: String, refresh: Boolean) {
+    override fun getWeather(city: String, units: String, refresh: Boolean) {
         if (refresh)
             repository.refreshWeatherDay()
 
-        repository.getCurrentWeather(city)
+        repository.getCurrentWeather(city, units)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
@@ -24,11 +24,11 @@ class HomePresenter(private val repository: WeatherRepository) : HomeContract.Pr
                 })
     }
 
-    override fun getWeather(latitude: Double, longitude: Double, refresh: Boolean) {
+    override fun getWeather(latitude: Double, longitude: Double, units: String, refresh: Boolean) {
         if (refresh)
             repository.refreshWeatherDay()
 
-        repository.getCurrentWeather(latitude, longitude)
+        repository.getCurrentWeather(latitude, longitude, units)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({
