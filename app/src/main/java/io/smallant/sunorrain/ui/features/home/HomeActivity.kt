@@ -38,7 +38,7 @@ class HomeActivity :
     private var searchVisible: Boolean = false
     private var isSearchOpening = false
     private var isSearching: Boolean = false
-    private val menuItem by lazy { findViewById<View>(R.id.action_search) }
+    private var searchItem: MenuItem? = null
 
     /**
      * NEXT DAYS TRANSITION
@@ -157,6 +157,7 @@ class HomeActivity :
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home, menu)
+        searchItem = menu?.findItem(R.id.action_search)
         return true
     }
 
@@ -220,7 +221,7 @@ class HomeActivity :
 
     private fun changeTemperatureSymbol() {
         text_temperature_symbol.text =
-                if(preferences.unitOfMeasure == getString(R.string.imperial))
+                if (preferences.unitOfMeasure == getString(R.string.imperial))
                     getString(R.string.temperature_imperial)
                 else
                     getString(R.string.temperature_metrics)
@@ -295,8 +296,8 @@ class HomeActivity :
 
     @TargetApi(21)
     private fun displaySearch() {
-        menuItem?.let {
-            CircularRevealCompat.circularReveal(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
+        searchItem?.let {
+            CircularRevealCompat.circularReveal(layout_search, findViewById<View>(R.id.action_search), main_layout, object : SimpleAnimatorListener() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     isSearchOpening = true
@@ -314,8 +315,8 @@ class HomeActivity :
 
     @TargetApi(21)
     private fun hideSearch() {
-        menuItem?.let {
-            CircularRevealCompat.circularHide(layout_search, menuItem, main_layout, object : SimpleAnimatorListener() {
+        searchItem?.let {
+            CircularRevealCompat.circularHide(layout_search, findViewById<View>(R.id.action_search), main_layout, object : SimpleAnimatorListener() {
                 override fun onAnimationStart(animation: Animator?) {
                     super.onAnimationStart(animation)
                     isSearchOpening = true
