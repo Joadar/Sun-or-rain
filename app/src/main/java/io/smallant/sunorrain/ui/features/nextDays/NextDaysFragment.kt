@@ -8,6 +8,8 @@ import io.smallant.sunorrain.SORApplication.Companion.repository
 import io.smallant.sunorrain.adapters.DaysAdapter
 import io.smallant.sunorrain.data.models.Forecast
 import io.smallant.sunorrain.data.models.ForecastDetail
+import io.smallant.sunorrain.extensions.convertCelciusToFahrenheit
+import io.smallant.sunorrain.extensions.convertFahrenheitToCelcius
 import io.smallant.sunorrain.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_next_days.*
 
@@ -78,13 +80,18 @@ class NextDaysFragment :
         }
     }
 
-/*    override fun onResume() {
-        super.onResume()
-        Log.d("HomeActivityLog", "onResume Fragment")
+    fun updateTemperature() {
         currentForecast?.let {
+            it.list = it.list.map { weather ->
+                weather.temp!!.day = if (preferences.unitOfMeasure == getString(R.string.imperial))
+                    weather.temp.day.convertCelciusToFahrenheit()
+                else
+                    weather.temp.day.convertFahrenheitToCelcius()
+                weather
+            }
             displayWeekWeather(it)
         }
-    }*/
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -94,7 +101,6 @@ class NextDaysFragment :
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
-            currentForecast = it.getSerializable("currentForecast") as Forecast
             displayWeekWeather(it.getSerializable("currentForecast") as Forecast)
         }
     }

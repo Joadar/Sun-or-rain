@@ -176,6 +176,10 @@ class HomeActivity :
                         it.main.temp.convertFahrenheitToCelcius()
 
                     displayWeatherInfos(it)
+                    val nextDaysFragment = supportFragmentManager.findFragmentById(R.id.layout_next_days)
+                    if (nextDaysFragment is NextDaysFragment) {
+                        nextDaysFragment.updateTemperature()
+                    }
                 }
             }
         }

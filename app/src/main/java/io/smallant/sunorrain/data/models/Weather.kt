@@ -41,7 +41,7 @@ data class Detail(
 ) : Serializable
 
 data class Forecast(
-        val list: List<ForecastDetail>,
+        var list: List<ForecastDetail>,
         val city: City
 ) : Serializable
 
@@ -57,7 +57,7 @@ data class ForecastDetail(
 ) : Serializable
 
 data class Temperature(
-        val day: Double,
+        var day: Double,
         val min: Double,
         val max: Double,
         val night: Double,
