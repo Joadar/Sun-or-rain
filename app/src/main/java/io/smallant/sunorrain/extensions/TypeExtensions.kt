@@ -12,7 +12,7 @@ fun String.checkIcon(hour: Int): Int {
         "light rain" -> return R.drawable.ic_light_rain
         "moderate rain" -> return R.drawable.ic_moderate_rain
         "few clouds" -> return R.drawable.ic_cloudy
-        "thunderstorm" -> return R.drawable.storm
+        "thunderstorm" -> return R.drawable.ic_storm
         "mist" -> return R.drawable.ic_mist
         else -> {
             if (this.contains("clouds")) return R.drawable.ic_clouds
