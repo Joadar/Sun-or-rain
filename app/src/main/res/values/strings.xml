@@ -30,4 +30,7 @@
     <string name="title_about">About</string>
     <string name="no_easter_egg">No Easter-Egg… at least not yet ;)</string>
 
+    <!-- Settings -->
+    <string name="title_settings">Settings</string>
+
 </resources>
