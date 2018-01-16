@@ -9,15 +9,18 @@ import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.MenuItem
 import io.smallant.sunorrain.BuildConfig
 import io.smallant.sunorrain.R
+import io.smallant.sunorrain.SORApplication
 import io.smallant.sunorrain.extensions.replaceFragmentSafely
 import io.smallant.sunorrain.extensions.toast
 import io.smallant.sunorrain.helpers.AppUtils
+import io.smallant.sunorrain.tools.TrackingTools
 import io.smallant.sunorrain.ui.base.BaseActivity
 
 /**
  * Created by jpannetier on 26/04/2017.
  */
 class AboutActivity : BaseActivity() {
+    private val tracking: TrackingTools by lazy { TrackingTools((application as SORApplication).getDefaultTracker()) }
 
     companion object {
         fun create(context: Context) {
@@ -30,6 +33,7 @@ class AboutActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(R.anim.slide_up, android.R.anim.fade_out)
+        tracking.hitPage("about")
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -64,6 +68,7 @@ class AboutActivity : BaseActivity() {
             val rate = findPreference(getString(R.string.key_preferences_rate))
             rate.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 AppUtils.launchStoreIntent(context, getString(R.string.package_name))
+                (activity as AboutActivity).tracking.hitAction("about", "click", "store")
                 true
             }
 
@@ -74,6 +79,7 @@ class AboutActivity : BaseActivity() {
                 mIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(context?.getString(R.string.contact_default_email)))
                 mIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_email_title))
                 startActivity(Intent.createChooser(mIntent, getString(R.string.send_email_with)))
+                (activity as AboutActivity).tracking.hitAction("about", "click", "contact")
                 true
             }
 
@@ -83,6 +89,7 @@ class AboutActivity : BaseActivity() {
             version.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 if (nbClick == 5) {
                     context?.toast(getString(R.string.no_easter_egg))
+                    (activity as AboutActivity).tracking.hitAction("about", "click", "easter-egg")
                 }
                 nbClick++
                 true

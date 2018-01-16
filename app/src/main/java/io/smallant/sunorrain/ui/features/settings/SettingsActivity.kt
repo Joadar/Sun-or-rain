@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.MenuItem
 import io.smallant.sunorrain.R
+import io.smallant.sunorrain.SORApplication
 import io.smallant.sunorrain.extensions.replaceFragmentSafely
+import io.smallant.sunorrain.tools.TrackingTools
 import io.smallant.sunorrain.ui.base.BaseActivity
 
 /**
@@ -14,6 +16,8 @@ import io.smallant.sunorrain.ui.base.BaseActivity
  */
 class SettingsActivity : BaseActivity() {
     private val settingsFragment: SettingsFragment by lazy { SettingsFragment() }
+    private val tracking: TrackingTools by lazy { TrackingTools((application as SORApplication).getDefaultTracker()) }
+
     private lateinit var oldUnit: String
 
     companion object {
@@ -27,6 +31,7 @@ class SettingsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(R.anim.slide_up, android.R.anim.fade_out)
+        tracking.hitPage("settings")
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         replaceFragmentSafely(fragment = settingsFragment, containerViewId = R.id.settings_container, tag = "settings_container")

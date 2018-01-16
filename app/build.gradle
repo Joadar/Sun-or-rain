@@ -82,6 +82,7 @@ dependencies {
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.google.android.gms:play-services-analytics:11.8.0'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
