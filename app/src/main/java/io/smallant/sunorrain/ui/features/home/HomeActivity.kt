@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.google.android.gms.maps.SupportMapFragment
 import io.smallant.sunorrain.R
+import io.smallant.sunorrain.SORApplication
 import io.smallant.sunorrain.SORApplication.Companion.repository
 import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.extensions.*
@@ -21,6 +22,7 @@ import io.smallant.sunorrain.helpers.AppConstant
 import io.smallant.sunorrain.helpers.CircularRevealCompat
 import io.smallant.sunorrain.helpers.JsonController
 import io.smallant.sunorrain.helpers.SimpleAnimatorListener
+import io.smallant.sunorrain.tools.TrackingTools
 import io.smallant.sunorrain.ui.base.BaseMapLocationActivity
 import io.smallant.sunorrain.ui.features.about.AboutActivity
 import io.smallant.sunorrain.ui.features.nextDays.NextDaysFragment
@@ -62,6 +64,7 @@ class HomeActivity :
     private var toastError: Toast? = null
     private val jsonController: JsonController by lazy { JsonController(this) }
     private var currentWeather: Weather? = null
+    private val tracking: TrackingTools by lazy { TrackingTools((application as SORApplication).getDefaultTracker()) }
 
     override val layoutId: Int = R.layout.activity_home
 
@@ -72,9 +75,11 @@ class HomeActivity :
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         presenter.view = this
+        tracking.hitPage("home")
 
         if (savedInstanceState != null) {
             layout_splashscreen.gone()
+            splashScreenDisplayed = true
         } else {
             initNextDaysFragment()
         }
@@ -88,32 +93,34 @@ class HomeActivity :
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                y = event.y
-                dy = y - layout_next_days.y
-            }
-            MotionEvent.ACTION_MOVE -> {
-                differenceY = event.y - dy
-                if (y - event.y <= layoutNextDaysHeight) {
-                    if (!initialYSaved) {
-                        initialYSaved = true
-                        initialY = differenceY
+        if (splashScreenDisplayed) {
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    y = event.y
+                    dy = y - layout_next_days.y
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    differenceY = event.y - dy
+                    if (y - event.y <= layoutNextDaysHeight) {
+                        if (!initialYSaved) {
+                            initialYSaved = true
+                            initialY = differenceY
+                        }
+                        val alpha = 0.2F * ((initialY - layout_next_days.y) / (layoutNextDaysHeight))
+
+                        layout_opacity.alpha = alpha
+                        layout_next_days.y = differenceY
                     }
-                    val alpha = 0.2F * ((initialY - layout_next_days.y) / (layoutNextDaysHeight))
 
-                    layout_opacity.alpha = alpha
-                    layout_next_days.y = differenceY
-                }
+                    if (differenceY > initialY) {
+                        layout_opacity.alpha = 0F
+                        differenceY = initialY
+                        layout_next_days.y = initialY
+                    }
 
-                if (differenceY > initialY) {
-                    layout_opacity.alpha = 0F
-                    differenceY = initialY
-                    layout_next_days.y = initialY
-                }
-
-                if (differenceY < initialY - layoutNextDaysHeight + nextDaysHeightVisible) {
-                    layout_next_days.y = initialY - layoutNextDaysHeight.toFloat() + nextDaysHeightVisible
+                    if (differenceY < initialY - layoutNextDaysHeight + nextDaysHeightVisible) {
+                        layout_next_days.y = initialY - layoutNextDaysHeight.toFloat() + nextDaysHeightVisible
+                    }
                 }
             }
         }
@@ -150,14 +157,17 @@ class HomeActivity :
                 if (!isSearchOpening) {
                     displaySearch()
                 }
+                tracking.hitAction("home", "click", "search")
                 return true
             }
             R.id.action_about -> {
                 AboutActivity.create(this)
+                tracking.hitAction("home", "click", "about")
                 return true
             }
             R.id.action_settings -> {
                 startActivityForResult(Intent(this, SettingsActivity::class.java), AppConstant.REQUEST_CODE_SETTINGS)
+                tracking.hitAction("home", "click", "settings")
                 return true
             }
         }
@@ -197,8 +207,7 @@ class HomeActivity :
         mapIsReady()
 
         if (!splashScreenDisplayed) {
-            layout_splashscreen.fadeOut()
-            splashScreenDisplayed = true
+            layout_splashscreen.fadeOut({ splashScreenDisplayed = true })
         }
         replaceFragmentSafely(fragment = NextDaysFragment.create(data.coord.lat, data.coord.lon), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
         hideSearch()
@@ -245,6 +254,7 @@ class HomeActivity :
                 hideSearch()
                 hideKeyboard()
             }
+            tracking.hitAction("click", "search", "close")
         }
     }
 
@@ -285,16 +295,19 @@ class HomeActivity :
     private fun manageSearchActions() {
         button_search.setOnClickListener {
             onSearchWeatherClick()
+            tracking.hitAction("click", "search/city", input_city.text.toString())
         }
 
         button_current_location.setOnClickListener {
             presenter.getWeather(currentLatitude, currentLongitude, preferences.unitOfMeasure)
             viewActionsOnSearchWeatherClicked()
+            tracking.hitAction("click", "search/current-location", currentWeather?.name ?: "")
         }
 
         input_city.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 onSearchWeatherClick()
+                tracking.hitAction("click", "search/city", "close")
                 true
             } else {
                 false
@@ -304,6 +317,7 @@ class HomeActivity :
 
     @TargetApi(21)
     private fun displaySearch() {
+        tracking.hitPage("search")
         searchItem?.let {
             CircularRevealCompat.circularReveal(layout_search, findViewById<View>(R.id.action_search), main_layout, object : SimpleAnimatorListener() {
                 override fun onAnimationStart(animation: Animator?) {
