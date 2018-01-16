@@ -75,6 +75,7 @@ class HomeActivity :
 
         if (savedInstanceState != null) {
             layout_splashscreen.gone()
+            splashScreenDisplayed = true
         } else {
             initNextDaysFragment()
         }
@@ -88,32 +89,34 @@ class HomeActivity :
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                y = event.y
-                dy = y - layout_next_days.y
-            }
-            MotionEvent.ACTION_MOVE -> {
-                differenceY = event.y - dy
-                if (y - event.y <= layoutNextDaysHeight) {
-                    if (!initialYSaved) {
-                        initialYSaved = true
-                        initialY = differenceY
+        if (splashScreenDisplayed) {
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    y = event.y
+                    dy = y - layout_next_days.y
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    differenceY = event.y - dy
+                    if (y - event.y <= layoutNextDaysHeight) {
+                        if (!initialYSaved) {
+                            initialYSaved = true
+                            initialY = differenceY
+                        }
+                        val alpha = 0.2F * ((initialY - layout_next_days.y) / (layoutNextDaysHeight))
+
+                        layout_opacity.alpha = alpha
+                        layout_next_days.y = differenceY
                     }
-                    val alpha = 0.2F * ((initialY - layout_next_days.y) / (layoutNextDaysHeight))
 
-                    layout_opacity.alpha = alpha
-                    layout_next_days.y = differenceY
-                }
+                    if (differenceY > initialY) {
+                        layout_opacity.alpha = 0F
+                        differenceY = initialY
+                        layout_next_days.y = initialY
+                    }
 
-                if (differenceY > initialY) {
-                    layout_opacity.alpha = 0F
-                    differenceY = initialY
-                    layout_next_days.y = initialY
-                }
-
-                if (differenceY < initialY - layoutNextDaysHeight + nextDaysHeightVisible) {
-                    layout_next_days.y = initialY - layoutNextDaysHeight.toFloat() + nextDaysHeightVisible
+                    if (differenceY < initialY - layoutNextDaysHeight + nextDaysHeightVisible) {
+                        layout_next_days.y = initialY - layoutNextDaysHeight.toFloat() + nextDaysHeightVisible
+                    }
                 }
             }
         }
@@ -197,8 +200,7 @@ class HomeActivity :
         mapIsReady()
 
         if (!splashScreenDisplayed) {
-            layout_splashscreen.fadeOut()
-            splashScreenDisplayed = true
+            layout_splashscreen.fadeOut({ splashScreenDisplayed = true })
         }
         replaceFragmentSafely(fragment = NextDaysFragment.create(data.coord.lat, data.coord.lon), containerViewId = R.id.layout_next_days, allowStateLoss = true, tag = "main_container")
         hideSearch()

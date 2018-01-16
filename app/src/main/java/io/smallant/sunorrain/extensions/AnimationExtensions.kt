@@ -36,3 +36,22 @@ fun View.fadeOut() {
 
     this.startAnimation(fadeOut)
 }
+
+fun View.fadeOut(onEnding: () -> Unit) {
+    val fadeOut = AlphaAnimation(1f, 0f)
+    fadeOut.interpolator = AccelerateInterpolator()
+    fadeOut.duration = 300
+
+    fadeOut.setAnimationListener(object : Animation.AnimationListener {
+        override fun onAnimationEnd(animation: Animation) {
+            this@fadeOut.gone()
+            onEnding()
+        }
+
+        override fun onAnimationRepeat(animation: Animation) {}
+        override fun onAnimationStart(animation: Animation) {}
+    })
+
+    this.startAnimation(fadeOut)
+}
+
