@@ -139,9 +139,11 @@ class HomeActivity :
         if (searchVisible) {
             layout_search.visible()
         }
-        currentWeather = savedInstanceState?.getSerializable("currentWeather") as Weather
-        currentWeather?.let {
-            displayWeatherInfos(it)
+        savedInstanceState?.getSerializable("currentWeather")?.let {
+            currentWeather = it as Weather
+            currentWeather?.let { weather ->
+                displayWeatherInfos(weather)
+            }
         }
     }
 

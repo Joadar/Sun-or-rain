@@ -101,7 +101,9 @@ class NextDaysFragment :
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
-            displayWeekWeather(it.getSerializable("currentForecast") as Forecast)
+            it.getSerializable("currentForecast")?.let { forecast ->
+                displayWeekWeather(forecast as Forecast)
+            }
         }
     }
 
