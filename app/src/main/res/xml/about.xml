@@ -13,4 +13,8 @@
         android:key="@string/key_preferences_version"
         android:title="@string/title_preferences_version" />
 
+    <io.smallant.sunorrain.ui.widgets.MultilinesPreference
+        android:key="@string/key_licences"
+        android:title="@string/title_licences" />
+
 </android.support.v7.preference.PreferenceScreen>
