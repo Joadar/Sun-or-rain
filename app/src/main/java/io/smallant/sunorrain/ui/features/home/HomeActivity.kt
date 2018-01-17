@@ -93,7 +93,7 @@ class HomeActivity :
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (splashScreenDisplayed) {
+        if (splashScreenDisplayed && !isSearchOpening && !searchVisible) {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     y = event.y
@@ -224,7 +224,8 @@ class HomeActivity :
     private fun displayWeatherInfos(data: Weather) {
         currentWeather = data
         val timeZone = jsonController.getTimeZone(data.sys.country)
-        text_time.text = (Calendar.getInstance().timeInMillis / 1000).getHoursMinutes(timeZone)
+        text_time.text = (Calendar.getInstance().timeInMillis / 1000).toString()
+        text_time.timeZone = timeZone
         text_temperature.text = getString(R.string.temperature, data.main.temp.toCeil, "")
         text_humidity.text = getString(R.string.humidity, data.main.humidity.toInt())
         text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
@@ -320,13 +321,9 @@ class HomeActivity :
     @TargetApi(21)
     private fun displaySearch() {
         tracking.hitPage("search")
+        isSearchOpening = true
         searchItem?.let {
             CircularRevealCompat.circularReveal(layout_search, findViewById<View>(R.id.action_search), main_layout, object : SimpleAnimatorListener() {
-                override fun onAnimationStart(animation: Animator?) {
-                    super.onAnimationStart(animation)
-                    isSearchOpening = true
-                }
-
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
                     searchVisible = true
@@ -339,13 +336,9 @@ class HomeActivity :
 
     @TargetApi(21)
     private fun hideSearch() {
+        isSearchOpening = false
         searchItem?.let {
             CircularRevealCompat.circularHide(layout_search, findViewById<View>(R.id.action_search), main_layout, object : SimpleAnimatorListener() {
-                override fun onAnimationStart(animation: Animator?) {
-                    super.onAnimationStart(animation)
-                    isSearchOpening = true
-                }
-
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
                     onSearchClose()
