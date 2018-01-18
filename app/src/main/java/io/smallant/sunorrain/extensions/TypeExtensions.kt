@@ -30,18 +30,11 @@ fun String.checkIcon(hour: Int): Int {
     }
 }
 
-fun Long.getHoursMinutes(timeZone: String) =
-        String.format(
-                "%02d:%02d",
-                this.calendarFromTimeZone(timeZone).get(Calendar.HOUR_OF_DAY),
-                this.calendarFromTimeZone(timeZone).get(Calendar.MINUTE)
-        )
-
-fun Long.calendarFromTimeZone(timeZone: String): Calendar {
+fun Long.getHoursMinutes(timeZone: String, format: String): String {
     val date = Date(this * 1000)
     val calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone), Locale.getDefault())
     calendar.time = date
-    return calendar
+    return SimpleDateFormat(format, Locale.getDefault()).format(calendar.time)
 }
 
 val Long.toDay: String

@@ -239,17 +239,22 @@ class HomeActivity :
         val timeZone = jsonController.getTimeZone(data.sys.country)
         text_time.text = (Calendar.getInstance().timeInMillis / 1000).toString()
         text_time.timeZone = timeZone
+        val format12hours = "hh:mm a"
+        val format24hours = "HH:mm"
+        var currentFormat = format12hours
         if(preferences.timeFormat == getString(R.string.hours_12)) {
-            text_time.format12Hour = "hh:mm a"
-            text_time.format24Hour = "hh:mm a"
+            text_time.format12Hour = format12hours
+            text_time.format24Hour = format12hours
+            currentFormat = format12hours
         } else {
-            text_time.format12Hour = "HH:mm"
-            text_time.format24Hour = "HH:mm"
+            text_time.format12Hour = format24hours
+            text_time.format24Hour = format24hours
+            currentFormat = format24hours
         }
         text_temperature.text = getString(R.string.temperature, data.main.temp.toCeil, "")
         text_humidity.text = getString(R.string.humidity, data.main.humidity.toInt())
-        text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
-        text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone)
+        text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone, currentFormat)
+        text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone, currentFormat)
         image_weather.setImageResource(data.icon)
         changeTemperatureSymbol()
     }
