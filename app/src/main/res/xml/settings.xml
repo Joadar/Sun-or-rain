@@ -9,4 +9,12 @@
         android:summary="%s"
         android:title="@string/text_unit_measure" />
 
+    <ListPreference
+        android:defaultValue="@string/time_format_default"
+        android:entries="@array/time_format_labels"
+        android:entryValues="@array/time_format_values"
+        android:key="@string/key_time_format"
+        android:summary="%s"
+        android:title="@string/text_time_format" />
+
 </android.support.v7.preference.PreferenceScreen>

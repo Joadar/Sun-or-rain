@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Unit measure -->
     <string name="key_unit_measure" translatable="false">unit_measure</string>
     <string name="text_unit_measure">Unit of measure</string>
     <string name="metric">metric</string>
@@ -16,4 +17,23 @@
         <item>Celsius</item>
         <item>Fahrenheit</item>
     </string-array>
+
+    <!-- Hour format -->
+    <string name="key_time_format" translatable="false">time_format</string>
+    <string name="text_time_format">Time format</string>
+    <string name="hours_12">12</string>
+    <string name="hours_24">24</string>
+
+    <string-array name="time_format_values">
+        <item>@string/hours_12</item>
+        <item>@string/hours_24</item>
+    </string-array>
+
+    <string name="time_format_default">@string/hours_24</string>
+
+    <string-array name="time_format_labels">
+        <item>12 hours</item>
+        <item>24 hours</item>
+    </string-array>
+
 </resources>
