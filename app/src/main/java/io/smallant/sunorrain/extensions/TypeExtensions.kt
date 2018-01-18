@@ -7,34 +7,35 @@ import java.util.*
 val Double?.toCeil: Int
     get() = Math.ceil(this ?: 0.0).toInt()
 
-fun String.checkIcon(hour: Int): Int {
-    when (this) {
-        "light rain" -> return R.drawable.ic_light_rain
-        "moderate rain" -> return R.drawable.ic_moderate_rain
-        "few clouds" -> return R.drawable.ic_cloudy
-        "thunderstorm" -> return R.drawable.ic_storm
-        "mist" -> return R.drawable.ic_mist
-        else -> {
-            if (this.contains("clouds")) return R.drawable.ic_clouds
-            else if (this.contains("rain")) return R.drawable.ic_heavy_rain
-            else if (this.contains("snow")) return R.drawable.ic_snow
-            else if (this == "clear sky") {
-                if (hour >= 18 || hour < 7) {
-                    return R.drawable.ic_moon
-                } else {
-                    R.drawable.ic_sunny
+fun String.checkIcon(currentCityTime: Long = 0, sunriseTime: Long = 0, sunsetTime: Long = 0, isTwelve: Boolean = false) : Int{
+        when (this) {
+            "light rain" -> return R.drawable.ic_light_rain
+            "moderate rain" -> return R.drawable.ic_moderate_rain
+            "few clouds" -> return R.drawable.ic_cloudy
+            "thunderstorm" -> return R.drawable.ic_storm
+            "mist" -> return R.drawable.ic_mist
+            else -> {
+                when {
+                    this.contains("clouds") -> return R.drawable.ic_clouds
+                    this.contains("rain") -> return R.drawable.ic_heavy_rain
+                    this.contains("snow") -> return R.drawable.ic_snow
+                    this == "clear sky" || this == "sky is clear" -> {
+                        if (isTwelve)
+                            return R.drawable.ic_sunny
+                        if (currentCityTime < sunriseTime || currentCityTime >= sunsetTime)
+                            return R.drawable.ic_moon
+                        else
+                            return R.drawable.ic_sunny
+                    }
+                    else -> return R.drawable.ic_clouds
                 }
             }
-            return R.drawable.ic_sunny
         }
-    }
 }
-
 fun Long.getHoursMinutes(timeZone: String, format: String): String {
-    val date = Date(this * 1000)
-    val calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone), Locale.getDefault())
-    calendar.time = date
-    return SimpleDateFormat(format, Locale.getDefault()).format(calendar.time)
+    val sdf = SimpleDateFormat(format, Locale.getDefault())
+    sdf.timeZone = TimeZone.getTimeZone(timeZone)
+    return sdf.format(this * 1000)
 }
 
 val Long.toDay: String
@@ -69,4 +70,4 @@ fun Long.checkDay(dayName: String, dayNumero: String): String {
 fun Double.convertFahrenheitToCelcius() = (this - 32) * 5 / 9
 
 // Converts to fahrenheit
-fun Double.convertCelciusToFahrenheit() = this* 9 / 5 + 32
+fun Double.convertCelciusToFahrenheit() = this * 9 / 5 + 32

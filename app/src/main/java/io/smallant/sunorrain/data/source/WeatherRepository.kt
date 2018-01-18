@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.smallant.sunorrain.data.models.Forecast
 import io.smallant.sunorrain.data.models.Weather
 import io.smallant.sunorrain.extensions.checkIcon
-import java.util.*
 
 /**
  * Created by Jonathan on 21/05/2016.
@@ -57,12 +56,8 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
         return data.flatMap {
             Observable.just(it)
         }.doOnNext {
-            val date = Date(it.dt * 1000)
-            val calendar = Calendar.getInstance(Locale.getDefault())
-            calendar.time = date
-
             currentWeather = it
-            currentWeather?.icon = it.weather[0].description.checkIcon(calendar.get(Calendar.HOUR_OF_DAY))
+            currentWeather?.icon = it.weather[0].description.checkIcon(it.dt, it.sys.sunrise, it.sys.sunset)
         }.doOnComplete {
             isCurrentWeatherCacheDirty = false
         }
@@ -77,7 +72,7 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
         }.doOnNext {
             weekWeather = it
             weekWeather?.list?.map {
-                it.icon = it.weather[0].description.checkIcon(12)
+                it.icon = it.weather[0].description.checkIcon(isTwelve = true)
             }
         }.doOnComplete {
             isWeekWeatherCacheDirty = false
