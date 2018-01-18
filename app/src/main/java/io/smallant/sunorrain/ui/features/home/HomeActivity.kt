@@ -179,22 +179,35 @@ class HomeActivity :
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AppConstant.REQUEST_CODE_SETTINGS) {
-            if (resultCode == RESULT_OK) {
-                currentWeather?.let {
-                    changeTemperatureSymbol()
-                    it.main.temp = if (preferences.unitOfMeasure == getString(R.string.imperial))
-                        it.main.temp.convertCelciusToFahrenheit()
-                    else
-                        it.main.temp.convertFahrenheitToCelcius()
-
-                    displayWeatherInfos(it)
+            when(resultCode){
+                AppConstant.RESULT_UNIT_MESURE,
+                AppConstant.RESULT_UNIT_AND_TIME -> {
+                    currentWeatherUnitMeasureUpdated()?.let {
+                        displayWeatherInfos(it)
+                    }
                     val nextDaysFragment = supportFragmentManager.findFragmentById(R.id.layout_next_days)
                     if (nextDaysFragment is NextDaysFragment) {
                         nextDaysFragment.updateTemperature()
                     }
                 }
+                AppConstant.RESULT_TIME_FORMAT -> {
+                    currentWeather?.let {
+                        displayWeatherInfos(it)
+                    }
+                }
             }
         }
+    }
+
+    private fun currentWeatherUnitMeasureUpdated(): Weather? {
+        currentWeather?.let {
+            changeTemperatureSymbol()
+            it.main.temp = if (preferences.unitOfMeasure == getString(R.string.imperial))
+                it.main.temp.convertCelciusToFahrenheit()
+            else
+                it.main.temp.convertFahrenheitToCelcius()
+        }
+        return currentWeather
     }
 
     override fun onBackPressed() {
@@ -226,6 +239,13 @@ class HomeActivity :
         val timeZone = jsonController.getTimeZone(data.sys.country)
         text_time.text = (Calendar.getInstance().timeInMillis / 1000).toString()
         text_time.timeZone = timeZone
+        if(preferences.timeFormat == getString(R.string.hours_12)) {
+            text_time.format12Hour = "hh:mm a"
+            text_time.format24Hour = "hh:mm a"
+        } else {
+            text_time.format12Hour = "HH:mm"
+            text_time.format24Hour = "HH:mm"
+        }
         text_temperature.text = getString(R.string.temperature, data.main.temp.toCeil, "")
         text_humidity.text = getString(R.string.humidity, data.main.humidity.toInt())
         text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone)
