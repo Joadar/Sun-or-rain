@@ -3,30 +3,37 @@ package io.smallant.sunorrain.ui.base
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
+import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+
 
 abstract class BaseLocationActivity :
         BaseActivity(),
         LocationListener {
 
     private val locationManager: LocationManager by lazy { getSystemService(Context.LOCATION_SERVICE) as LocationManager }
+    private val fusedLocationClient : FusedLocationProviderClient by lazy { LocationServices.getFusedLocationProviderClient(this) }
 
     private val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 10F
     private val MIN_TIME_BW_UPDATES = (1000 * 60 * 1).toLong()
-    private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 101
+    private val PERMISSIONS_REQUEST_ACCESS_LOCATION = 101
     protected var currentLatitude: Double = 0.0
     protected var currentLongitude: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            manageUserLocation()
+            requestLocation()
         }
     }
 
@@ -47,6 +54,7 @@ abstract class BaseLocationActivity :
         currentLongitude = savedInstanceState?.getDouble("currentLongitude", 0.0) ?: 0.0
     }
 
+    @SuppressLint("MissingPermission")
     override fun onLocationChanged(location: Location) {
         currentLatitude = location.latitude
         currentLongitude = location.longitude
@@ -57,17 +65,17 @@ abstract class BaseLocationActivity :
             return
 
         when (requestCode) {
-            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
+            PERMISSIONS_REQUEST_ACCESS_LOCATION -> {
                 if (grantResults.isNotEmpty()) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        // Denied
-                        finish()
+                    val fineLocation = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    val coarseLocation = grantResults[1] == PackageManager.PERMISSION_GRANTED
+
+                    if (fineLocation && coarseLocation) {
+                        requestLocation()
                     } else {
-                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            requestLocation()
-                        } else {
-                            // Bob never checked click
-                        }
+                        Snackbar.make(this.findViewById(android.R.id.content),
+                                "Please grant permissions for a precise weather",
+                                Snackbar.LENGTH_INDEFINITE).setAction("ENABLE") { permissionsRequest() }.show()
                     }
                 }
             }
@@ -79,25 +87,50 @@ abstract class BaseLocationActivity :
     override fun onProviderEnabled(provider: String?) {}
     override fun onProviderDisabled(provider: String?) {}
 
-    private fun manageUserLocation() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+
+    private fun requestLocation() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this)
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this)
+            when {
+                locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null ->
+                    onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER))
+                locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null ->
+                    onLocationChanged(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER))
+                else -> {
+                    fusedLocationClient.lastLocation.addOnSuccessListener {
+                        if(it != null)
+                            onLocationChanged(it)
+                        else
+                            checkGPS()
+                    }
+
+                }
+            }
         } else {
-            requestLocation()
+            permissionsRequest()
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun requestLocation() {
-        /*locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                MIN_TIME_BW_UPDATES,
-                MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                this)*/
-        onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER))
+    private fun permissionsRequest() {
+        ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                PERMISSIONS_REQUEST_ACCESS_LOCATION)
+    }
+
+    private fun checkLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsRequest()
+        }
+    }
+
+    private fun checkGPS() {
+        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
 }
