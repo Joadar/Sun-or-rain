@@ -2,6 +2,7 @@ package io.smallant.sunorrain.ui.base
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -131,6 +132,11 @@ abstract class BaseLocationActivity :
     }
 
     private fun checkGPS() {
-        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+        AlertDialog.Builder(this).setMessage("Your GPS seems to be disabled, do you want to enable it?")
+        .setCancelable(false)
+        .setPositiveButton("Yes") { p0, p1 -> startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
+        .setNegativeButton("No"){ p0, p1 -> finish()}
+        .create()
+        .show()
     }
 }
