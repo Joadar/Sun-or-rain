@@ -7,31 +7,37 @@ import java.util.*
 val Double?.toCeil: Int
     get() = Math.ceil(this ?: 0.0).toInt()
 
-fun String.checkIcon(currentCityTime: Long = 0, sunriseTime: Long = 0, sunsetTime: Long = 0, isTwelve: Boolean = false) : Int{
-        when (this) {
-            "light rain" -> return R.drawable.ic_light_rain
-            "moderate rain" -> return R.drawable.ic_moderate_rain
-            "few clouds" -> return R.drawable.ic_cloudy
-            "thunderstorm" -> return R.drawable.ic_storm
-            "mist" -> return R.drawable.ic_mist
-            else -> {
-                when {
-                    this.contains("clouds") -> return R.drawable.ic_clouds
-                    this.contains("rain") -> return R.drawable.ic_heavy_rain
-                    this.contains("snow") -> return R.drawable.ic_snow
-                    this == "clear sky" || this == "sky is clear" -> {
-                        if (isTwelve)
-                            return R.drawable.ic_sunny
-                        if (currentCityTime < sunriseTime || currentCityTime >= sunsetTime)
-                            return R.drawable.ic_moon
-                        else
-                            return R.drawable.ic_sunny
-                    }
-                    else -> return R.drawable.ic_clouds
-                }
+fun String.checkIcon(description: String, currentCityTime: Long = 0, sunriseTime: Long = 0, sunsetTime: Long = 0, isTwelve: Boolean = false) : Int {
+
+    if(!isTwelve) {
+        if (currentCityTime < sunriseTime || currentCityTime >= sunsetTime) {
+            return when {
+                this.startsWith("01") -> R.drawable.ic_moon
+                this.startsWith("02") -> R.drawable.ic_cloudy_night
+                else -> R.drawable.ic_clouds
             }
         }
+    }
+
+    return when {
+        this.startsWith("01") -> R.drawable.ic_sunny
+        this.startsWith("02") -> R.drawable.ic_cloudy
+        this.startsWith("03") -> R.drawable.ic_clouds
+        this.startsWith("04") -> R.drawable.ic_clouds
+        this.startsWith("09") -> R.drawable.ic_light_rain
+        this.startsWith("10") ->
+            when {
+                description.startsWith("light") -> R.drawable.ic_light_rain
+                description.startsWith("moderate") -> R.drawable.ic_moderate_rain
+                else -> R.drawable.ic_heavy_rain
+            }
+        this.startsWith("11") -> R.drawable.ic_storm
+        this.startsWith("13") -> R.drawable.ic_snow
+        this.startsWith("50") -> R.drawable.ic_mist
+        else -> R.drawable.ic_clouds
+    }
 }
+
 fun Long.getHoursMinutes(timeZone: String, format: String): String {
     val sdf = SimpleDateFormat(format, Locale.getDefault())
     sdf.timeZone = TimeZone.getTimeZone(timeZone)

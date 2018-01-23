@@ -57,7 +57,7 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
             Single.just(it)
         }.doOnSuccess {
             currentWeather = it
-            currentWeather?.icon = it.weather[0].description.checkIcon(it.dt, it.sys.sunrise, it.sys.sunset)
+            currentWeather?.icon = it.weather[0].icon.checkIcon(it.weather[0].description, it.dt, it.sys.sunrise, it.sys.sunset)
             isCurrentWeatherCacheDirty = false
         }
     }
@@ -71,7 +71,7 @@ class WeatherRepository(private val remoteDataSource: WeatherDataSource) : Weath
         }.doOnSuccess {
             weekWeather = it
             weekWeather?.list?.map {
-                it.icon = it.weather[0].description.checkIcon(isTwelve = true)
+                it.icon = it.weather[0].icon.checkIcon(it.weather[0].description, isTwelve = true)
             }
             isWeekWeatherCacheDirty = false
         }
