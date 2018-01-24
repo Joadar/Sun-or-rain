@@ -59,6 +59,7 @@ abstract class BaseLocationActivity :
     override fun onLocationChanged(location: Location) {
         currentLatitude = location.latitude
         currentLongitude = location.longitude
+        locationManager.removeUpdates(this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -132,10 +133,10 @@ abstract class BaseLocationActivity :
     }
 
     private fun checkGPS() {
-        AlertDialog.Builder(this).setMessage("Your GPS seems to be disabled, do you want to enable it?")
+        AlertDialog.Builder(this).setMessage("Your location seems to be disabled, do you want to enable it?")
         .setCancelable(false)
-        .setPositiveButton("Yes") { p0, p1 -> startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
-        .setNegativeButton("No"){ p0, p1 -> finish()}
+        .setPositiveButton("Yes") { _, _ -> startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
+        .setNegativeButton("No"){ _, _ -> finish()}
         .create()
         .show()
     }
