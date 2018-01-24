@@ -202,10 +202,15 @@ class HomeActivity :
     private fun currentWeatherUnitMeasureUpdated(): Weather? {
         currentWeather?.let {
             changeTemperatureSymbol()
-            it.main.temp = if (preferences.unitOfMeasure == getString(R.string.imperial))
-                it.main.temp.convertCelciusToFahrenheit()
-            else
-                it.main.temp.convertFahrenheitToCelcius()
+            if (preferences.unitOfMeasure == getString(R.string.imperial)) {
+                it.main.temp = it.main.temp.convertCelciusToFahrenheit()
+                it.main.temp_min = it.main.temp_min.convertCelciusToFahrenheit()
+                it.main.temp_max = it.main.temp_max.convertCelciusToFahrenheit()
+            } else {
+                it.main.temp = it.main.temp.convertFahrenheitToCelcius()
+                it.main.temp_min = it.main.temp_min.convertFahrenheitToCelcius()
+                it.main.temp_max = it.main.temp_max.convertFahrenheitToCelcius()
+            }
         }
         return currentWeather
     }

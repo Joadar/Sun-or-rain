@@ -22,8 +22,8 @@ data class Main(
         var temp: Double,
         val pressure: Double,
         val humidity: Double,
-        val temp_min: Double,
-        val temp_max: Double
+        var temp_min: Double,
+        var temp_max: Double
 ) : Serializable
 
 data class Sys(
