@@ -44,7 +44,7 @@
                 android:drawablePadding="6dp"
                 android:gravity="center_vertical"
                 android:drawableStart="@drawable/ic_wind_22dp"
-                android:text="13 km/h"/>
+                android:text="@string/fake_wind"/>
 
         </LinearLayout>
 

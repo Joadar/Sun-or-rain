@@ -256,6 +256,12 @@ class HomeActivity :
         text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone, currentFormat)
         text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone, currentFormat)
         text_wind.text = getString(R.string.wind, data.wind.speed.mpsTokmph)
+        text_temperature_max.text = getString(
+                R.string.temperature_max,
+                data.main.temp_min.toCeil,
+                data.main.temp_max.toCeil,
+                if (preferences.unitOfMeasure == getString(R.string.imperial)) getString(R.string.temperature_imperial)
+                else getString(R.string.temperature_metrics))
         image_weather.setImageResource(data.icon)
         changeTemperatureSymbol()
     }
