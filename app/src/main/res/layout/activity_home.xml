@@ -124,6 +124,19 @@
                 android:textSize="28sp" />
 
             <TextView
+                android:id="@+id/text_wind"
+                style="@style/infos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:drawablePadding="6dp"
+                android:drawableStart="@drawable/ic_wind_28dp"
+                android:gravity="center_vertical"
+                android:text="@string/fake_wind"
+                android:textColor="#333"
+                android:textSize="28sp" />
+
+            <TextView
                 android:id="@+id/text_humidity"
                 style="@style/infos"
                 android:layout_width="wrap_content"
@@ -176,6 +189,7 @@
             android:id="@+id/layout_opacity"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="gone"
             android:background="#000000"
             app:layout_constraintBottom_toTopOf="@id/layout_next_days"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -281,6 +295,7 @@
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

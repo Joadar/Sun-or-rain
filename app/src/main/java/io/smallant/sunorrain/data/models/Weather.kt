@@ -10,7 +10,12 @@ data class Weather(
         val sys: Sys,
         val id: Long,
         val name: String,
-        var icon: Int
+        var icon: Int,
+        val wind: Wind
+) : Serializable
+
+data class Wind(
+    val speed: Double
 ) : Serializable
 
 data class Main(

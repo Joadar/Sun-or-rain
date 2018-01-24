@@ -18,6 +18,7 @@
     <string name="fake_temperature">16°</string>
     <string name="fake_temperature_symbol">C</string>
     <string name="fake_humidity">81.4%</string>
+    <string name="fake_wind">24 km/h</string>
     <string name="fake_sunrise">07:35</string>
     <string name="fake_sunset">19:01</string>
     <string name="fake_date">Monday, 23th</string>

@@ -255,6 +255,7 @@ class HomeActivity :
         text_humidity.text = getString(R.string.humidity, data.main.humidity.toInt())
         text_sunrise.text = data.sys.sunrise.getHoursMinutes(timeZone, currentFormat)
         text_sunset.text = data.sys.sunset.getHoursMinutes(timeZone, currentFormat)
+        text_wind.text = getString(R.string.wind, data.wind.speed.mpsTokmph)
         image_weather.setImageResource(data.icon)
         changeTemperatureSymbol()
     }
