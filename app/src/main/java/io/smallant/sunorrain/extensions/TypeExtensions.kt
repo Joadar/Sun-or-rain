@@ -11,11 +11,10 @@ fun String.checkIcon(description: String, currentCityTime: Long = 0, sunriseTime
 
     if(!isTwelve) {
         if (currentCityTime < sunriseTime || currentCityTime >= sunsetTime) {
-            return when {
-                this.startsWith("01") -> R.drawable.ic_moon
-                this.startsWith("02") -> R.drawable.ic_cloudy_night
-                else -> R.drawable.ic_clouds
-            }
+            if(this.startsWith("01"))
+                return R.drawable.ic_moon
+            else if(this.startsWith("02"))
+                return R.drawable.ic_cloudy_night
         }
     }
 
