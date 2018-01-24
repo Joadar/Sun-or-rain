@@ -10,6 +10,7 @@ import android.widget.TextView
 import io.smallant.sunorrain.R
 import io.smallant.sunorrain.data.models.ForecastDetail
 import io.smallant.sunorrain.data.source.local.PreferencesController
+import io.smallant.sunorrain.extensions.mpsTokmph
 import io.smallant.sunorrain.extensions.toCeil
 import io.smallant.sunorrain.extensions.toDay
 
@@ -26,13 +27,10 @@ class DaysAdapter(private var items: List<ForecastDetail>, private val context: 
                 if(preferences.unitOfMeasure == context?.getString(R.string.imperial)) context.getString(R.string.temperature_imperial)
                 else context?.getString(R.string.temperature_metrics) ?: ""
 
-        /*val temperatureValue = if(preferences.unitOfMeasure == context?.getString(R.string.imperial))
-            weather.temp?.day?.convertCelciusToFahrenheit()?.toCeil
-        else
-            weather.temp?.day?.convertFahrenheitToCelcius()?.toCeil*/
         holder?.temperature?.text = context?.resources?.getString(R.string.temperature, weather.temp?.day?.toCeil, temperatureSymbol)
         holder?.icon?.setImageResource(weather.icon)
         holder?.date?.text = weather.dt.toDay
+        holder?.wind?.text = context?.resources?.getString(R.string.wind, weather.speed.mpsTokmph)
     }
 
     override fun getItemCount() = items.size
@@ -49,5 +47,6 @@ class DaysAdapter(private var items: List<ForecastDetail>, private val context: 
         val temperature: TextView by lazy { view.findViewById<TextView>(R.id.text_temperature) }
         val icon: ImageView by lazy { view.findViewById<ImageView>(R.id.image_weather) }
         val date: TextView by lazy { view.findViewById<TextView>(R.id.text_date) }
+        val wind: TextView by lazy {view.findViewById<TextView>(R.id.text_wind)}
     }
 }

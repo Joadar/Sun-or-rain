@@ -7,6 +7,9 @@ import java.util.*
 val Double?.toCeil: Int
     get() = Math.ceil(this ?: 0.0).toInt()
 
+val Double?.mpsTokmph: Int
+    get() = Math.ceil((this ?: 0.0).times(3.6)).toInt()
+
 fun String.checkIcon(description: String, currentCityTime: Long = 0, sunriseTime: Long = 0, sunsetTime: Long = 0, isTwelve: Boolean = false) : Int {
 
     if(!isTwelve) {

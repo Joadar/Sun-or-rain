@@ -23,6 +23,12 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/text_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fake_date" />
+
+            <TextView
                 android:id="@+id/text_temperature"
                 style="@style/temperature"
                 android:layout_width="wrap_content"
@@ -31,10 +37,14 @@
                 tools:text="9°C" />
 
             <TextView
-                android:id="@+id/text_date"
+                android:id="@+id/text_wind"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fake_date" />
+                android:textColor="#BBB"
+                android:drawablePadding="6dp"
+                android:gravity="center_vertical"
+                android:drawableStart="@drawable/ic_wind_22dp"
+                android:text="13 km/h"/>
 
         </LinearLayout>
 

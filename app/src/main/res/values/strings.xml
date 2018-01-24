@@ -24,6 +24,7 @@
 
     <!-- Infos -->
     <string name="temperature">%1$d°%2$s</string>
+    <string name="wind">%1$d km/h</string>
     <string name="humidity">%1$d%%</string>
     <string name="temperature_imperial">F</string>
     <string name="temperature_metrics">C</string>

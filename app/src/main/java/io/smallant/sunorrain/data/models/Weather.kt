@@ -51,7 +51,7 @@ data class ForecastDetail(
         val pressure: Float = 0F,
         val humidity: Int = 0,
         val weather: List<Detail> = listOf(),
-        val speed: Float = 0F,
+        val speed: Double = 0.0,
         val deg: Int = 0,
         var icon: Int = 0
 ) : Serializable
